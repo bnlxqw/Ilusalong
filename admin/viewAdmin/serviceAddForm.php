@@ -39,7 +39,7 @@ if (isset($test)) {
                 <?php
                 if (isset($arr) && is_array($arr)) {
                     foreach ($arr as $row) {
-                        echo '<option value="' . (int)$row['category_id'] . '">' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+                        echo '<option value="' . (int)$row['category_id'] . '">' . htmlspecialchars(localized_category_name($row), ENT_QUOTES, 'UTF-8') . '</option>';
                     }
                 }
                 ?>

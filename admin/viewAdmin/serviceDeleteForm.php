@@ -28,11 +28,11 @@ else{
     <table class='table table-bordered'>
         <tr>
             <td><?php echo language_text('Service name'); ?></td>
-            <td><input type='text' name='title' class='form-control' required value="<?php echo htmlspecialchars($detail['title'], ENT_QUOTES, 'UTF-8'); ?>" readonly></td>
+            <td><input type='text' name='title' class='form-control' required value="<?php echo htmlspecialchars(localized_service_title($detail), ENT_QUOTES, 'UTF-8'); ?>" readonly></td>
         </tr>
         <tr>
             <td><?php echo language_text('Description'); ?></td>
-            <td><textarea rows="5" name="text" class='form-control' required readonly><?php echo htmlspecialchars($detail['text'], ENT_QUOTES, 'UTF-8'); ?></textarea></td>
+            <td><textarea rows="5" name="text" class='form-control' required readonly><?php echo htmlspecialchars(localized_service_description($detail), ENT_QUOTES, 'UTF-8'); ?></textarea></td>
         </tr>
         <tr>
             <td><?php echo language_text('Category'); ?></td>
@@ -42,7 +42,7 @@ else{
                     foreach($arr as $row){
                         echo '<option value="'.(int)$row['category_id'].'"';
                         if($row['category_id']==$detail['category_id']) echo ' selected';
-                        echo '>'.htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8').'</option>';
+                        echo '>'.htmlspecialchars(localized_category_name($row), ENT_QUOTES, 'UTF-8').'</option>';
                     }
                     ?>
                 </select>

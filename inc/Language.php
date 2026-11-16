@@ -78,6 +78,7 @@ function language_text($text) {
         'Unable to add service.' => 'Не удалось добавить услугу.',
         'Service name' => 'Название услуги',
         'Description' => 'Описание',
+        'Displayed on the website:' => 'Отображается на сайте:',
         'Category' => 'Категория',
         'Price (€)' => 'Цена (€)',
         'Image' => 'Изображение',

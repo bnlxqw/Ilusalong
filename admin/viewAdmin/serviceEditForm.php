@@ -31,11 +31,17 @@ else{
     <table class='table table-bordered'>
         <tr>
             <td><?php echo language_text('Service name'); ?></td>
-            <td><input type='text' name='title' class='form-control' required value="<?php echo htmlspecialchars($detail['title'], ENT_QUOTES, 'UTF-8'); ?>"></td>
+            <td>
+                <input type='text' name='title' class='form-control' required value="<?php echo htmlspecialchars($detail['title'], ENT_QUOTES, 'UTF-8'); ?>">
+                <small class="help-block"><?php echo language_text('Displayed on the website:'); ?> <?php echo htmlspecialchars(localized_service_title($detail), ENT_QUOTES, 'UTF-8'); ?></small>
+            </td>
         </tr>
         <tr>
             <td><?php echo language_text('Description'); ?></td>
-            <td><textarea rows="5" name="text" class='form-control' required><?php echo htmlspecialchars($detail['text'], ENT_QUOTES, 'UTF-8'); ?></textarea></td>
+            <td>
+                <textarea rows="5" name="text" class='form-control' required><?php echo htmlspecialchars($detail['text'], ENT_QUOTES, 'UTF-8'); ?></textarea>
+                <small class="help-block"><?php echo language_text('Displayed on the website:'); ?> <?php echo htmlspecialchars(localized_service_description($detail), ENT_QUOTES, 'UTF-8'); ?></small>
+            </td>
         </tr>
         <tr>
             <td><?php echo language_text('Category'); ?></td>
@@ -45,7 +51,7 @@ else{
                     foreach($arr as $row){
                         echo '<option value="'.(int)$row['category_id'].'"';
                         if($row['category_id']==$detail['category_id']) echo ' selected';
-                        echo '>'.htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8').'</option>';
+                        echo '>'.htmlspecialchars(localized_category_name($row), ENT_QUOTES, 'UTF-8').'</option>';
                     }
                     ?>
                 </select>

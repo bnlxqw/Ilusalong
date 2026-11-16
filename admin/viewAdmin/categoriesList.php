@@ -13,7 +13,7 @@
                     <?php foreach ($arr as $category) { ?>
                         <tr>
                             <td><?php echo (int)$category['category_id']; ?></td>
-                            <td><?php echo htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars(localized_category_name($category), ENT_QUOTES, 'UTF-8'); ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>

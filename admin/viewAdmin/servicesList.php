@@ -19,8 +19,9 @@
                 echo '<tr>';
                 
                 echo '<td>'.(int)$row['service_id'].'</td>     ';
-                echo '<td><b>'.language_text('Name:').'</b> '.htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8').'<br>';
-                echo '<b>'.language_text('Category:').'</b> <i>'.htmlspecialchars((string)$row['name'], ENT_QUOTES, 'UTF-8').'</i>';
+                echo '<td><b>'.language_text('Name:').'</b> '.htmlspecialchars(localized_service_title($row), ENT_QUOTES, 'UTF-8').'<br>';
+                echo '<b>'.language_text('Description').':</b> '.htmlspecialchars(localized_service_description($row), ENT_QUOTES, 'UTF-8').'<br>';
+                echo '<b>'.language_text('Category:').'</b> <i>'.htmlspecialchars(localized_category_name($row), ENT_QUOTES, 'UTF-8').'</i>';
                 echo '<br><b>'.language_text('Price:').'</b> <i>'.htmlspecialchars((string)$row['price'], ENT_QUOTES, 'UTF-8').' €</i>';
                 echo '</td>';
                 echo '<td>';
