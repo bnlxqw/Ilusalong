@@ -102,6 +102,13 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 .admin-content .alert-info { background: #eef4ed; color: #476149; }
 .admin-content .alert-warning { background: #fbefeb; color: #875b5c; }
 .admin-empty { padding: 18px; color: var(--admin-muted); background: #fffdfc; border-radius: 10px; }
+.specialist-admin-form { display: grid; max-width: 620px; gap: 10px; margin-bottom: 30px; }
+.specialist-admin-form label { margin-top: 4px; }
+.specialist-edit-form { margin: 0; }
+.specialist-delete-form { display: inline-block; margin: 0 0 0 6px; }
+.specialist-admin-form textarea,
+.specialist-edit-form textarea { resize: vertical; }
+.specialist-save-button, .specialist-delete-button { white-space: normal; }
 .category-inline-form { display: flex; align-items: center; gap: 8px; }
 .category-delete-form { margin: 0; }
 .category-inline-form .form-control { min-width: 0; }
@@ -214,7 +221,19 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
   }
   .category-inline-form .category-save-button .action-label,
   .category-delete-form .category-delete-button .action-label,
+  .specialist-save-button .action-label,
+  .specialist-delete-button .action-label,
   .services-table-wrap .action-label { display: none; }
+  .specialist-save-button, .specialist-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+  .specialist-delete-form { margin-left: 4px; }
   .services-table-wrap td:last-child a {
     display: inline-flex;
     align-items: center;

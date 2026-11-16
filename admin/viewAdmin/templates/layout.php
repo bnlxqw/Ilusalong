@@ -6,7 +6,7 @@
     <title><?php echo htmlspecialchars(language_text('Ilusalong — Admin dashboard'), ENT_QUOTES, 'UTF-8'); ?></title>
     <link href="public/css/bootstrap.css" rel="stylesheet">
     <link href="../style.css" rel="stylesheet">
-    <link href="public/css/mystyle.css?v=2" rel="stylesheet">
+    <link href="public/css/mystyle.css?v=3" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="public/css/font-awesome.min.css">
     <!-- SCRIPT -->
@@ -26,6 +26,7 @@
                 <li><a href="./"><?php echo language_text('Dashboard'); ?></a></li>
                 <li><a href="categoriesAdmin"><?php echo language_text('Categories'); ?></a></li>
                 <li><a href="servicesAdmin"><?php echo language_text('Services'); ?></a></li>
+                <li><a href="specialistsAdmin"><?php echo language_text('Specialists'); ?></a></li>
                 <li><span class="admin-user"><?php echo htmlspecialchars($_SESSION["username"], ENT_QUOTES, "UTF-8"); ?></span></li>
                 <li><a href="logout"><?php echo language_text('Log out'); ?></a></li>
             </ul>

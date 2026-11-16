@@ -15,7 +15,7 @@ class Booking {
     }
 
     public static function createBooking(&$error = null) {
-        if (!isset($_POST['createBooking'], $_POST['service_id'], $_POST['customer_name'],
+        if (!isset($_POST['createBooking'], $_POST['service_id'], $_POST['specialist_id'], $_POST['customer_name'],
             $_POST['customer_email'], $_POST['customer_phone'], $_POST['booking_date'])) {
             $error = 'Please complete all booking fields.';
             return false;
@@ -28,7 +28,8 @@ class Booking {
         }
 
         $serviceId = filter_var($_POST['service_id'], FILTER_VALIDATE_INT);
-        if ($serviceId === false || $serviceId < 1) {
+        $specialistId = filter_var($_POST['specialist_id'], FILTER_VALIDATE_INT);
+        if ($serviceId === false || $serviceId < 1 || $specialistId === false || $specialistId < 1) {
             $error = 'The selected service is not available.';
             return false;
         }
@@ -71,14 +72,19 @@ class Booking {
             $error = 'The selected service is not available.';
             return false;
         }
+        if (!Specialist::getSpecialistById($specialistId)) {
+            $error = 'The selected specialist is not available.';
+            return false;
+        }
 
         $query = "INSERT INTO bookings
-                    (user_id, session_token_hash, service_id, customer_name, customer_email, customer_phone, booking_date, status)
+                    (user_id, session_token_hash, service_id, specialist_id, customer_name, customer_email, customer_phone, booking_date, status)
                   VALUES
-                    (NULL, :session_token_hash, :service_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
+                    (NULL, :session_token_hash, :service_id, :specialist_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
         return $db->executeRun($query, array(
             ':session_token_hash' => self::getSessionTokenHash(),
             ':service_id' => $serviceId,
+            ':specialist_id' => $specialistId,
             ':customer_name' => $name,
             ':customer_email' => $email,
             ':customer_phone' => $phone,
@@ -87,11 +93,13 @@ class Booking {
     }
 
     public static function getBookingsByUser() {
-        $query = "SELECT bookings.booking_id, bookings.service_id, bookings.customer_name,
+        $query = "SELECT bookings.booking_id, bookings.service_id, bookings.specialist_id,
+                         specialists.name AS specialist_name, bookings.customer_name,
                          bookings.customer_email, bookings.customer_phone, bookings.booking_date,
                          bookings.status, services.title, services.text, services.price
                   FROM bookings
                   LEFT JOIN services ON bookings.service_id = services.service_id
+                  LEFT JOIN specialists ON bookings.specialist_id = specialists.specialist_id
                   WHERE bookings.session_token_hash = :session_token_hash
                   ORDER BY bookings.booking_date DESC, bookings.booking_id DESC";
         $db = new Database();

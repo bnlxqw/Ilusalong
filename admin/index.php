@@ -7,6 +7,7 @@ session_start();
     include_once("modelAdmin/modelAdmin.php");
     include_once("modelAdmin/modelAdminServices.php");
     include_once("modelAdmin/modelAdminCategory.php");
+    include_once("modelAdmin/modelAdminSpecialists.php");
 
 
     include_once("controllerAdmin/controllerAdmin.php");

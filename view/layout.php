@@ -4,7 +4,7 @@
         <title><?php echo htmlspecialchars(language_text('Ilusalong — Beauty Salon'), ENT_QUOTES, 'UTF-8'); ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="<?php echo htmlspecialchars(language_text('Beauty services and care at Ilusalong'), ENT_QUOTES, 'UTF-8'); ?>">
-        <link rel="stylesheet" type="text/css" href="style.css?v=2">
+        <link rel="stylesheet" type="text/css" href="style.css?v=3">
         <meta charset="utf-8">
     
     </head>
@@ -21,6 +21,7 @@
             ?>
           </ul>
         </li>
+        <li><a href="specialists"><?php echo language_text('Specialists'); ?></a></li>
         <li><a href="registerForm"><?php echo language_text('Register'); ?></a></li>
         <li><a href="myBookings"><?php echo language_text('My bookings'); ?></a></li>
        </ul>

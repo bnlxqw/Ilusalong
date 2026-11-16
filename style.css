@@ -200,6 +200,10 @@ a:hover { color: var(--ink); }
     box-shadow: 0 14px 30px rgba(100, 70, 67, .12);
   }
   .service-card:hover .service-image { transform: scale(1.025); }
+  .specialist-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 13px 28px rgba(100, 70, 67, .1);
+  }
 }
 
 .service-detail {
@@ -217,6 +221,37 @@ a:hover { color: var(--ink); }
 .service-detail-image { width: 100%; max-height: 460px; object-fit: cover; border-radius: 14px; background: var(--blush); }
 .service-detail h1 { margin-top: 0; font-size: clamp(32px, 4vw, 46px); font-weight: 500; }
 .service-detail-content > p:not(.service-price) { color: var(--muted); }
+
+.specialists-page h1 { margin: 0 0 8px; font: 500 clamp(32px, 5vw, 46px)/1.15 Georgia, serif; }
+.specialists-intro { margin: 0 0 28px; color: var(--muted); }
+.specialist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+.specialist-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 24px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(100, 70, 67, .05);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.specialist-avatar {
+  display: grid;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  background: var(--blush);
+  border-radius: 50%;
+  color: var(--rose-dark);
+  font: 500 26px/1 Georgia, serif;
+}
+.specialist-card-content { min-width: 0; }
+.specialist-card h2 { margin: 0 0 8px; font-size: 23px; font-weight: 500; }
+.specialist-card p:not(.specialist-specialty) { margin: 0 0 16px; color: var(--muted); }
+.specialist-specialty { margin: 0 0 4px; color: var(--rose-dark); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.specialist-card .button-link { margin-top: 6px; }
 
 .reviews { margin-top: 38px; }
 .reviews h2 { font-size: 28px; font-weight: 500; }
@@ -320,6 +355,7 @@ textarea { resize: vertical; }
   .service-card-footer { align-items: flex-start; flex-wrap: wrap; }
   .service-detail { gap: 18px; padding: 16px; }
   .service-detail-image { max-height: 300px; }
+  .specialist-card { gap: 14px; padding: 18px; }
   .review, .booking-form, .register-form { padding: 18px; }
   .booking-section, .bookings-page { margin-top: 24px; }
   .table-wrap { width: 100%; overflow: visible; }
@@ -374,7 +410,7 @@ textarea { resize: vertical; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .service-card, .service-image, .button-link, button { transition: none; }
+  .service-card, .service-image, .specialist-card, .button-link, button { transition: none; }
   .service-card:hover, .service-card:hover .service-image,
-  .button-link:hover, button:hover, .button-link:active, button:active { transform: none; }
+  .specialist-card:hover, .button-link:hover, button:hover, .button-link:active, button:active { transform: none; }
 }

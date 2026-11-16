@@ -59,5 +59,31 @@ class ControllerAdmin {
         include_once 'viewAdmin/categoriesList.php';
     }
 
+    public static function specialistsList() {
+        $arr = modelAdminSpecialists::getSpecialistList();
+        include_once 'viewAdmin/specialistsList.php';
+    }
+
+    public static function specialistAddResult() {
+        $error = null;
+        $saved = modelAdminSpecialists::addSpecialist($error);
+        $arr = modelAdminSpecialists::getSpecialistList();
+        include_once 'viewAdmin/specialistsList.php';
+    }
+
+    public static function specialistEditResult() {
+        $error = null;
+        $saved = modelAdminSpecialists::editSpecialist($error);
+        $arr = modelAdminSpecialists::getSpecialistList();
+        include_once 'viewAdmin/specialistsList.php';
+    }
+
+    public static function specialistDeleteResult() {
+        $error = null;
+        $deleted = modelAdminSpecialists::deleteSpecialist($error);
+        $arr = modelAdminSpecialists::getSpecialistList();
+        include_once 'viewAdmin/specialistsList.php';
+    }
+
 }
 ?>

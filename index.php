@@ -8,6 +8,7 @@ require 'model/Services.php';
 require 'model/Reviews.php';
 require 'model/Register.php';
 require 'model/Booking.php';
+require 'model/Specialist.php';
 
 include_once 'view/services.php';
 include_once 'view/reviews.php';

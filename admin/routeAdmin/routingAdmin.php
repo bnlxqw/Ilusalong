@@ -22,6 +22,18 @@ elseif (!controllerAdmin::requireAdmin()) {
 elseif ($path == 'categoriesAdmin') {
     $response = controllerAdmin::categoriesList();
 }
+elseif ($path == 'specialistsAdmin') {
+    $response = controllerAdmin::specialistsList();
+}
+elseif ($path == 'specialistAddResult' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = controllerAdmin::specialistAddResult();
+}
+elseif ($path == 'specialistEditResult' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = controllerAdmin::specialistEditResult();
+}
+elseif ($path == 'specialistDeleteResult' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = controllerAdmin::specialistDeleteResult();
+}
 elseif ($path == 'categoryAddResult') {
     $response = controllerAdmin::categoryAddResult();
 }

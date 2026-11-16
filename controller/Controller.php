@@ -28,7 +28,16 @@ class Controller {
             self::error404();
             return;
         }
+        $specialists = Specialist::getAllActive();
         include_once 'view/service-detail.php';
+    }
+
+    public static function AllSpecialists() {
+        $arr = Specialist::getAllActive();
+        ob_start();
+        include 'view/specialists.php';
+        $content = ob_get_clean();
+        include_once 'view/layout.php';
     }
 
         public static function error404() {

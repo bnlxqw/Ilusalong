@@ -1,12 +1,25 @@
 <?php
 class ViewBookings {
-    public static function BookingForm($serviceId) {
+    public static function BookingForm($serviceId, $specialists) {
         echo '<section class="booking-section" id="booking"><h2>' . language_text('Book this service') . '</h2>';
         self::FlashMessage();
+        if (!$specialists) {
+            echo '<p class="notice notice-error">' . language_text('No specialists are currently available for booking.') . '</p></section>';
+            return;
+        }
         echo '<form class="booking-form" action="createBooking" method="post">
             <input type="hidden" name="service_id" value="' . (int)$serviceId . '">
             <input type="hidden" name="csrf_token" value="' .
                 htmlspecialchars(Booking::getCsrfToken(), ENT_QUOTES, 'UTF-8') . '">
+            <label for="booking-specialist">' . language_text('Choose a specialist') . '</label>
+            <select id="booking-specialist" name="specialist_id" required>
+                <option value="">' . language_text('Select a specialist') . '</option>';
+        foreach ($specialists as $specialist) {
+            echo '<option value="' . (int)$specialist['specialist_id'] . '">' .
+                htmlspecialchars($specialist['name'] . ' — ' . $specialist['specialty'], ENT_QUOTES, 'UTF-8') .
+                '</option>';
+        }
+        echo '</select>
             <label for="booking-name">' . language_text('Name') . '</label>
             <input id="booking-name" name="customer_name" type="text" maxlength="100" autocomplete="name" required>
             <label for="booking-email">' . language_text('Email address') . '</label>
@@ -31,6 +44,7 @@ class ViewBookings {
         echo '<div class="table-wrap"><table class="bookings-table">
             <thead><tr>
                 <th>' . language_text('Service') . '</th>
+                <th>' . language_text('Specialist') . '</th>
                 <th>' . language_text('Date and time') . '</th>
                 <th>' . language_text('Status') . '</th>
                 <th>' . language_text('Action') . '</th>
@@ -47,6 +61,10 @@ class ViewBookings {
             echo '<tr>
                 <td data-label="' . htmlspecialchars(language_text('Service'), ENT_QUOTES, 'UTF-8') . '">' .
                     htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</td>
+                <td data-label="' . htmlspecialchars(language_text('Specialist'), ENT_QUOTES, 'UTF-8') . '">' .
+                    htmlspecialchars(!empty($booking['specialist_name'])
+                        ? $booking['specialist_name']
+                        : language_text('Specialist no longer available'), ENT_QUOTES, 'UTF-8') . '</td>
                 <td data-label="' . htmlspecialchars(language_text('Date and time'), ENT_QUOTES, 'UTF-8') . '"><time datetime="' .
                     htmlspecialchars(date('c', strtotime($booking['booking_date'])), ENT_QUOTES, 'UTF-8') . '">' .
                     htmlspecialchars(date('d.m.Y H:i', strtotime($booking['booking_date'])), ENT_QUOTES, 'UTF-8') . '</time></td>

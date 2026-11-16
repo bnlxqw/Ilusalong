@@ -11,6 +11,9 @@
     elseif($path == 'services' || $path == 'all') {
         $response = Controller::AllServices();
     }
+    elseif($path == 'specialists') {
+        $response = Controller::AllSpecialists();
+    }
     elseif($path == 'category' and isset($_GET['category_id'])) {
         $response = Controller::ServicesByCategoryID($_GET['category_id']);
     }
