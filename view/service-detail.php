@@ -6,6 +6,9 @@ ob_start();
 ViewServices::ReadService($service);
 
 echo "<br>";
+ViewBookings::BookingForm($service['service_id']);
+
+echo "<br>";
 Controller::ReviewsCountWithAnchor($service['service_id']);
 Controller::Reviews($service['service_id']);
 

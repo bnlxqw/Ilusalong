@@ -7,9 +7,11 @@ require 'model/Category.php';
 require 'model/Services.php';
 require 'model/Reviews.php';
 require 'model/Register.php';
+require 'model/Booking.php';
 
 include_once 'view/services.php';
 include_once 'view/reviews.php';
+include_once 'view/bookings.php';
 
 
 include_once 'controller/Controller.php';

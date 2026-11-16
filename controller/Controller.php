@@ -65,5 +65,51 @@ class Controller {
 
         include_once('view/answerRegister.php');
     }
+
+    public static function myBookings() {
+        $arr = Booking::getBookingsByUser();
+        ob_start();
+        ViewBookings::MyBookings($arr);
+        $content = ob_get_clean();
+        include_once 'view/layout.php';
+    }
+
+    public static function createBooking() {
+        $error = null;
+        if (Booking::createBooking($error)) {
+            $_SESSION['booking_flash'] = array(
+                'type' => 'success',
+                'message' => 'Booking confirmed.'
+            );
+            header('Location: myBookings');
+            exit;
+        }
+
+        $_SESSION['booking_flash'] = array(
+            'type' => 'error',
+            'message' => $error === null ? 'Could not create booking.' : $error
+        );
+        $serviceId = isset($_POST['service_id']) ? (int)$_POST['service_id'] : 0;
+        if ($serviceId > 0) {
+            header('Location: service?service_id=' . $serviceId . '#booking');
+        } else {
+            header('Location: services');
+        }
+        exit;
+    }
+
+    public static function cancelBooking() {
+        $error = null;
+        $bookingId = isset($_POST['booking_id']) ? $_POST['booking_id'] : null;
+        $cancelled = Booking::cancelBooking($bookingId, $error);
+        $_SESSION['booking_flash'] = array(
+            'type' => $cancelled ? 'success' : 'error',
+            'message' => $cancelled
+                ? 'Booking cancelled.'
+                : ($error === null ? 'Could not cancel booking.' : $error)
+        );
+        header('Location: myBookings');
+        exit;
+    }
     
 }

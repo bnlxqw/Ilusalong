@@ -22,6 +22,7 @@
           </ul>
         </li>
         <li><a href="registerForm"><?php echo language_text('Register'); ?></a></li>
+        <li><a href="myBookings"><?php echo language_text('My bookings'); ?></a></li>
        </ul>
        <?php echo language_switcher(); ?>
       </nav>

@@ -17,6 +17,15 @@
     elseif($path == 'service' and isset($_GET['service_id'])) {
         $response = Controller::ServiceByID($_GET['service_id']);
     }
+    elseif($path == 'createBooking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $response = Controller::createBooking();
+    }
+    elseif($path == 'myBookings') {
+        $response = Controller::myBookings();
+    }
+    elseif($path == 'cancelBooking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $response = Controller::cancelBooking();
+    }
     elseif($path == 'insertreview' && isset($_POST['review'], $_POST['service_id']))
     {
         $response = Controller::InsertReview($_POST['review'], $_POST['service_id']);
