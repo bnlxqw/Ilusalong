@@ -96,6 +96,9 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 .admin-content .alert-info { background: #eef4ed; color: #476149; }
 .admin-content .alert-warning { background: #fbefeb; color: #875b5c; }
 .admin-empty { padding: 18px; color: var(--admin-muted); background: #fffdfc; border-radius: 10px; }
+.category-inline-form { display: flex; align-items: center; gap: 8px; }
+.category-delete-form { margin: 0; }
+.category-inline-form .form-control { min-width: 120px; }
 .footer { padding: 20px 0; border-top: 1px solid var(--admin-line); color: var(--admin-muted); text-align: center; }
 
 @media (max-width: 700px) {

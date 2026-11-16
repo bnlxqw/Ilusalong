@@ -22,6 +22,15 @@ elseif (!controllerAdmin::requireAdmin()) {
 elseif ($path == 'categoriesAdmin') {
     $response = controllerAdmin::categoriesList();
 }
+elseif ($path == 'categoryAddResult') {
+    $response = controllerAdmin::categoryAddResult();
+}
+elseif ($path == 'categoryEditResult') {
+    $response = controllerAdmin::categoryEditResult();
+}
+elseif ($path == 'categoryDeleteResult') {
+    $response = controllerAdmin::categoryDeleteResult();
+}
 elseif ($path == 'servicesAdmin') {
     $response = controllerAdminServices::ServicesList();
 }

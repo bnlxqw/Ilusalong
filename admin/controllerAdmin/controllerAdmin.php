@@ -38,5 +38,26 @@ class ControllerAdmin {
         include_once 'viewAdmin/categoriesList.php';
     }
 
+    public static function categoryAddResult() {
+        $error = null;
+        $added = modelAdminCategory::addCategory($error);
+        $arr = modelAdminCategory::getCategoryList();
+        include_once 'viewAdmin/categoriesList.php';
+    }
+
+    public static function categoryEditResult() {
+        $error = null;
+        $updated = modelAdminCategory::editCategory($error);
+        $arr = modelAdminCategory::getCategoryList();
+        include_once 'viewAdmin/categoriesList.php';
+    }
+
+    public static function categoryDeleteResult() {
+        $error = null;
+        $deleted = modelAdminCategory::deleteCategory($error);
+        $arr = modelAdminCategory::getCategoryList();
+        include_once 'viewAdmin/categoriesList.php';
+    }
+
 }
 ?>
