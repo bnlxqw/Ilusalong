@@ -13,11 +13,14 @@
 
 * { box-sizing: border-box; }
 
+img, video, iframe { max-width: 100%; }
+
 body {
   margin: 0;
   background: var(--cream);
   color: var(--ink);
   font: 16px/1.65 "Segoe UI", Arial, sans-serif;
+  overflow-wrap: anywhere;
 }
 
 a { color: var(--rose-dark); text-decoration: none; }
@@ -39,6 +42,7 @@ a:hover { color: var(--ink); }
   justify-content: space-between;
   gap: 24px;
 }
+.nav-wrap > *, .topmenu > li, .service-card-content, .service-detail-content { min-width: 0; }
 
 .brand {
   color: var(--ink);
@@ -142,9 +146,17 @@ a:hover { color: var(--ink); }
   border: 1px solid var(--line);
   border-radius: 18px;
   box-shadow: 0 8px 24px rgba(100, 70, 67, .05);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
 }
 
-.service-image { width: 240px; min-height: 190px; object-fit: cover; background: var(--blush); }
+.service-image {
+  flex: 0 0 240px;
+  width: 240px;
+  min-height: 190px;
+  object-fit: cover;
+  background: var(--blush);
+  transition: transform .35s ease;
+}
 .service-card-content { display: flex; flex: 1; flex-direction: column; padding: 24px 28px; }
 .service-card h2 { margin: 0 0 8px; font-size: 24px; font-weight: 500; }
 .service-card p { margin: 0; color: var(--muted); }
@@ -166,14 +178,33 @@ a:hover { color: var(--ink); }
   font: inherit;
   font-size: 14px;
   font-weight: 600;
-  transition: background .2s ease, transform .2s ease;
+  transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 
-.button-link:hover, button:hover { transform: translateY(-1px); background: var(--rose-dark); color: var(--white); }
+.button-link:hover, button:hover {
+  transform: translateY(-1px);
+  background: var(--rose-dark);
+  box-shadow: 0 5px 14px rgba(100, 70, 67, .16);
+  color: var(--white);
+}
+.button-link:active, button:active { transform: translateY(0) scale(.98); }
+.button-link:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--rose-dark);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .service-card:hover {
+    transform: translateY(-3px);
+    border-color: #e4cbc5;
+    box-shadow: 0 14px 30px rgba(100, 70, 67, .12);
+  }
+  .service-card:hover .service-image { transform: scale(1.025); }
+}
 
 .service-detail {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 36px;
   align-items: center;
   padding: 30px;
@@ -203,12 +234,13 @@ a:hover { color: var(--ink); }
   border: 1px solid var(--line);
   border-radius: 16px;
 }
+.review-form button, .register-form button, .booking-form button { max-width: 100%; white-space: normal; }
 
 .register-form { margin-top: 20px; }
 .booking-section, .bookings-page { margin-top: 34px; }
 .booking-section h2, .bookings-page h1 { font-weight: 500; }
 .booking-form label { margin-top: 4px; }
-.bookings-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.bookings-table { width: 100%; max-width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .bookings-table th, .bookings-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; }
 .bookings-table th { background: var(--blush); font-weight: 600; }
 .bookings-table tr:last-child td { border-bottom: 0; }
@@ -221,8 +253,10 @@ a:hover { color: var(--ink); }
 .notice-error { border-left: 4px solid var(--rose); }
 .notice a { display: inline-block; margin-left: 10px; }
 
-input, textarea {
+input, textarea, select {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 12px 14px;
   background: #fffdfc;
   border: 1px solid #e6d8d3;
@@ -231,20 +265,116 @@ input, textarea {
   font: inherit;
 }
 
-input:focus, textarea:focus { outline: 2px solid #dcb4b1; border-color: var(--rose); }
+input:focus, textarea:focus, select:focus { outline: 2px solid #dcb4b1; border-color: var(--rose); }
 textarea { resize: vertical; }
 .site-footer { padding: 24px 20px; border-top: 1px solid var(--line); color: var(--muted); text-align: center; font-size: 13px; }
 
+@media (max-width: 860px) {
+  .service-detail { grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 22px; }
+  .service-detail-image { max-height: 380px; }
+}
+
 @media (max-width: 700px) {
-  .nav-wrap { align-items: flex-start; flex-direction: column; gap: 8px; padding: 16px 0; }
-  .topmenu { flex-wrap: wrap; gap: 0; }
+  .nav-wrap {
+    width: calc(100% - 32px);
+    min-height: 0;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 12px 0;
+  }
+  .brand { font-size: 22px; }
+  .topmenu { order: 3; width: 100%; flex-wrap: wrap; gap: 0; }
   .topmenu a { padding: 9px 10px; }
-  .submenu { left: 0; }
+  .has-submenu {
+    display: grid;
+    flex: 1 0 100%;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+  }
+  .submenu {
+    position: static;
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    flex-wrap: wrap;
+    align-self: center;
+    min-width: 0;
+    gap: 0 2px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .has-submenu:hover .submenu,
+  .has-submenu:focus-within .submenu { display: flex; }
+  .submenu a { padding: 7px 8px; white-space: normal; }
   .page-content { padding-top: 24px; }
+  .hero { margin-bottom: 36px; padding: 34px 26px; border-radius: 18px; }
+  .hero h1 { font-size: clamp(34px, 10vw, 52px); }
+  .section-title { font-size: 28px; }
   .service-card { flex-direction: column; }
-  .service-image { width: 100%; max-height: 240px; }
+  .service-image { flex-basis: auto; width: 100%; min-height: 0; max-height: 260px; aspect-ratio: 16 / 9; }
   .service-card-content { min-height: 190px; padding: 20px; }
-  .table-wrap { overflow-x: auto; }
-  .bookings-table { min-width: 600px; }
-  .service-detail { grid-template-columns: 1fr; gap: 22px; padding: 18px; }
+  .service-card-footer { align-items: flex-start; flex-wrap: wrap; }
+  .service-detail { gap: 18px; padding: 16px; }
+  .service-detail-image { max-height: 300px; }
+  .review, .booking-form, .register-form { padding: 18px; }
+  .booking-section, .bookings-page { margin-top: 24px; }
+  .table-wrap { width: 100%; overflow: visible; }
+  .bookings-table, .bookings-table tbody, .bookings-table tr, .bookings-table td { display: block; width: 100%; }
+  .bookings-table { overflow: visible; border: 0; background: transparent; }
+  .bookings-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .bookings-table tbody tr {
+    margin-bottom: 12px;
+    padding: 8px 14px;
+    overflow: hidden;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .bookings-table tbody tr:last-child { margin-bottom: 0; }
+  .bookings-table th, .bookings-table td { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .bookings-table td { display: grid; grid-template-columns: minmax(84px, 34%) minmax(0, 1fr); gap: 8px; overflow-wrap: anywhere; }
+  .bookings-table td::before { content: attr(data-label); color: var(--muted); font-size: 12px; font-weight: 600; }
+  .bookings-table tr:last-child td { border-bottom: 1px solid var(--line); }
+  .bookings-table td:last-child { border-bottom: 0; }
+  .cancel-booking-form { min-width: 0; }
+  .cancel-booking-form button { max-width: 100%; white-space: normal; }
+}
+
+@media (max-width: 420px) {
+  body { font-size: 15px; }
+  .page-content { width: calc(100% - 28px); padding-top: 20px; }
+  .nav-wrap { width: calc(100% - 28px); }
+  .language-switch { margin-left: auto; }
+  .topmenu a { padding: 8px; font-size: 13px; }
+  .hero { padding: 28px 20px; }
+  .hero h1 { font-size: 36px; }
+  .service-card-content { padding: 18px; }
+  .service-detail h1 { font-size: 32px; }
+  .service-price { font-size: 20px; }
+  .button-link, button { max-width: 100%; padding: 10px 16px; }
+  .notice { padding: 17px; overflow-wrap: anywhere; }
+  .site-footer { padding: 20px 14px; }
+}
+
+@media (max-width: 340px) {
+  .brand { font-size: 19px; }
+  .topmenu a { padding-right: 6px; padding-left: 6px; font-size: 12px; }
+  .language-switch a { min-width: 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card, .service-image, .button-link, button { transition: none; }
+  .service-card:hover, .service-card:hover .service-image,
+  .button-link:hover, button:hover, .button-link:active, button:active { transform: none; }
 }

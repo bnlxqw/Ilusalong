@@ -37,19 +37,19 @@
                 <tbody>
                     <?php foreach ($arr as $category) { ?>
                         <tr>
-                            <td><?php echo (int)$category['category_id']; ?></td>
-                            <td>
+                            <td data-label="<?php echo htmlspecialchars(language_text('Category ID'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo (int)$category['category_id']; ?></td>
+                            <td data-label="<?php echo htmlspecialchars(language_text('Name'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <form method="POST" action="categoryEditResult" class="category-inline-form">
                                     <input type="hidden" name="category_id" value="<?php echo (int)$category['category_id']; ?>">
                                     <input type="text" name="name" class="form-control" maxlength="255" required value="<?php echo htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars(language_text('Category name'), ENT_QUOTES, 'UTF-8'); ?>">
-                                    <button type="submit" class="btn btn-primary" name="saveCategoryEdit"><?php echo language_text('Save changes'); ?></button>
+                                    <button type="submit" class="btn btn-primary category-save-button" name="saveCategoryEdit" aria-label="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>"><span class="action-label"><?php echo language_text('Save changes'); ?></span><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
                                 </form>
                                 <small class="help-block"><?php echo language_text('Displayed on the website:'); ?> <?php echo htmlspecialchars(localized_category_name($category), ENT_QUOTES, 'UTF-8'); ?></small>
                             </td>
-                            <td>
+                            <td data-label="<?php echo htmlspecialchars(language_text('Actions'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <form method="POST" action="categoryDeleteResult" class="category-delete-form" onsubmit="return confirm('<?php echo htmlspecialchars(language_text('Delete this category?'), ENT_QUOTES, 'UTF-8'); ?>');">
                                     <input type="hidden" name="category_id" value="<?php echo (int)$category['category_id']; ?>">
-                                    <button type="submit" class="btn btn-primary" name="deleteCategory"><?php echo language_text('Delete'); ?></button>
+                                    <button type="submit" class="btn btn-primary category-delete-button" name="deleteCategory" aria-label="<?php echo htmlspecialchars(language_text('Delete'), ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars(language_text('Delete'), ENT_QUOTES, 'UTF-8'); ?>"><span class="action-label"><?php echo language_text('Delete'); ?></span><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                                 </form>
                             </td>
                         </tr>

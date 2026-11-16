@@ -45,11 +45,14 @@ class ViewBookings {
                 ? localized_service_title($booking)
                 : language_text('Service no longer available');
             echo '<tr>
-                <td>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</td>
-                <td><time datetime="' . htmlspecialchars(date('c', strtotime($booking['booking_date'])), ENT_QUOTES, 'UTF-8') . '">' .
+                <td data-label="' . htmlspecialchars(language_text('Service'), ENT_QUOTES, 'UTF-8') . '">' .
+                    htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</td>
+                <td data-label="' . htmlspecialchars(language_text('Date and time'), ENT_QUOTES, 'UTF-8') . '"><time datetime="' .
+                    htmlspecialchars(date('c', strtotime($booking['booking_date'])), ENT_QUOTES, 'UTF-8') . '">' .
                     htmlspecialchars(date('d.m.Y H:i', strtotime($booking['booking_date'])), ENT_QUOTES, 'UTF-8') . '</time></td>
-                <td>' . htmlspecialchars($status, ENT_QUOTES, 'UTF-8') . '</td>
-                <td>';
+                <td data-label="' . htmlspecialchars(language_text('Status'), ENT_QUOTES, 'UTF-8') . '">' .
+                    htmlspecialchars($status, ENT_QUOTES, 'UTF-8') . '</td>
+                <td data-label="' . htmlspecialchars(language_text('Action'), ENT_QUOTES, 'UTF-8') . '">';
             if ($isFutureActive) {
                 echo '<form class="cancel-booking-form" action="cancelBooking" method="post">
                     <input type="hidden" name="booking_id" value="' . (int)$booking['booking_id'] . '">

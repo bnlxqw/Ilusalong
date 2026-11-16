@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="<?php echo current_language(); ?>">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo htmlspecialchars(language_text('Ilusalong — Admin dashboard'), ENT_QUOTES, 'UTF-8'); ?></title>
     <link href="public/css/bootstrap.css" rel="stylesheet">
     <link href="../style.css" rel="stylesheet">
-    <link href="public/css/mystyle.css" rel="stylesheet">
+    <link href="public/css/mystyle.css?v=2" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="public/css/font-awesome.min.css">
     <!-- SCRIPT -->

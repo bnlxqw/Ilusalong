@@ -13,6 +13,7 @@ body {
   background: var(--admin-cream);
   color: var(--admin-ink);
   font: 15px/1.6 "Segoe UI", Arial, sans-serif;
+  overflow-wrap: anywhere;
 }
 
 a { color: var(--admin-rose-dark); }
@@ -36,6 +37,8 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 .table-responsive { border: 0; }
 .admin-content .table {
   width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
   margin-bottom: 0;
   overflow: hidden;
   background: #fff;
@@ -59,6 +62,7 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 .admin-content .table td a { display: inline-block; margin: 3px 10px 3px 0; font-weight: 600; }
 
 .btn, .admin-content button {
+  max-width: 100%;
   padding: 10px 18px;
   border: 0;
   border-radius: 24px;
@@ -91,6 +95,8 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
   border-color: var(--admin-rose);
   box-shadow: 0 0 0 3px rgba(189, 133, 135, .15);
 }
+.admin-content input, .admin-content select, .admin-content textarea { max-width: 100%; min-width: 0; }
+.admin-content img { max-width: 100%; height: auto; }
 .admin-content form .table td:first-child { width: 24%; color: var(--admin-muted); font-weight: 600; }
 .admin-content .alert { border: 0; border-radius: 10px; }
 .admin-content .alert-info { background: #eef4ed; color: #476149; }
@@ -98,13 +104,137 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 .admin-empty { padding: 18px; color: var(--admin-muted); background: #fffdfc; border-radius: 10px; }
 .category-inline-form { display: flex; align-items: center; gap: 8px; }
 .category-delete-form { margin: 0; }
-.category-inline-form .form-control { min-width: 120px; }
+.category-inline-form .form-control { min-width: 0; }
+.admin-content .table-responsive, .services-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+}
+.admin-content .table-responsive > .admin-table, .services-table-wrap > .table { table-layout: fixed; }
+.admin-content .table td, .admin-content .table th { overflow-wrap: anywhere; white-space: normal; }
+.services-table-wrap .table .service-id-heading { width: 10%; white-space: nowrap; }
+.services-table-wrap .service-name-heading { width: 70%; }
+.services-table-wrap .service-actions-heading { width: 20%; }
 .footer { padding: 20px 0; border-top: 1px solid var(--admin-line); color: var(--admin-muted); text-align: center; }
 
-@media (max-width: 700px) {
-  .admin-nav .topmenu { flex-wrap: wrap; }
+@media (max-width: 800px) {
+  .admin-nav { align-items: center; flex-direction: row; flex-wrap: wrap; }
+  .admin-nav .topmenu { order: 3; width: 100%; flex-wrap: wrap; }
   .admin-nav .admin-user { padding: 9px 10px; }
   .admin-content { padding-top: 24px; }
-  .admin-panel, .admin-content > .container, .admin-content > article { padding: 18px; }
+  .admin-panel, .admin-content > .container, .admin-content > article { width: 100%; max-width: 100%; margin-right: 0; margin-left: 0; padding: 18px; }
   .admin-content .table > tbody > tr > td, .admin-content .table > thead > tr > th { padding: 10px; }
+  .admin-content h1 { font-size: 30px; }
+  .admin-content h2 { font-size: 26px; }
+  .category-inline-form { align-items: stretch; flex-direction: column; }
+  .category-inline-form .form-control { min-width: 0; }
+  .category-inline-form button, .category-delete-form button { width: 100%; }
+  .admin-content form .table { display: block; width: 100%; overflow: visible; border: 0; }
+  .admin-content form .table tbody { display: block; width: 100%; }
+  .admin-content form .table tr { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr); margin: 0 0 12px; padding: 12px; border: 1px solid var(--admin-line); border-radius: 10px; }
+  .admin-content form .table tr:last-child { margin-bottom: 0; }
+  .admin-content form .table td,
+  .admin-content form .table td:first-child { display: block; width: 100%; padding: 7px 4px; border: 0; }
+  .admin-content form .table td:first-child { padding-bottom: 2px; }
+  .admin-content form .table td[colspan] { padding-top: 12px; }
+  .admin-content form .table td[colspan] .btn { display: inline-flex; margin: 4px 4px 4px 0; }
+  .admin-content .table-responsive,
+  .services-table-wrap { overflow: visible; }
+  .admin-content .table-responsive > .admin-table,
+  .services-table-wrap > .table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+  .admin-content .table-responsive > .admin-table thead,
+  .services-table-wrap > .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .admin-content .table-responsive > .admin-table tbody,
+  .services-table-wrap > .table tbody { display: block; width: 100%; }
+  .admin-content .table-responsive > .admin-table tr,
+  .services-table-wrap > .table tr {
+    display: block;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid var(--admin-line);
+    border-radius: 12px;
+  }
+  .admin-content .table-responsive > .admin-table tr:last-child,
+  .services-table-wrap > .table tr:last-child { margin-bottom: 0; }
+  .admin-content .table-responsive > .admin-table td,
+  .services-table-wrap > .table td {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(65px, 30%) minmax(0, 1fr);
+    gap: 8px;
+    padding: 9px 0;
+    border: 0;
+    border-bottom: 1px solid var(--admin-line);
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  .admin-content .table-responsive > .admin-table th,
+  .services-table-wrap > .table th { white-space: normal; }
+  .admin-content .table-responsive > .admin-table td::before,
+  .services-table-wrap > .table td::before {
+    content: attr(data-label);
+    color: var(--admin-muted);
+    font-weight: 600;
+  }
+  .admin-content .table-responsive > .admin-table td:last-child,
+  .services-table-wrap > .table td:last-child { border-bottom: 0; }
+  .admin-content .table-responsive .category-inline-form,
+  .services-table-wrap td:last-child { min-width: 0; }
+  .services-table-wrap td:last-child a { display: block; width: fit-content; max-width: 100%; }
+  .admin-content .table-responsive > .admin-table td:last-child::before,
+  .services-table-wrap td:last-child::before { content: none; }
+  .category-inline-form .form-control { width: 100%; }
+  .category-inline-form .category-save-button,
+  .category-delete-form .category-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+  .category-inline-form .category-save-button .action-label,
+  .category-delete-form .category-delete-button .action-label,
+  .services-table-wrap .action-label { display: none; }
+  .services-table-wrap td:last-child a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin: 0 8px 0 0;
+    border-radius: 50%;
+    background: var(--admin-rose);
+    color: #fff;
+  }
+  .services-table-wrap td:last-child a .glyphicon { margin: 0; }
+  .admin-content .table-responsive .help-block,
+  .services-table-wrap td { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 420px) {
+  body { font-size: 14px; }
+  .admin-content { padding-right: 14px; padding-left: 14px; }
+  .admin-panel, .admin-content > .container, .admin-content > article { padding: 14px; }
+  .admin-nav .topmenu a { padding: 8px; }
+  .admin-content form .table td[colspan] .btn { width: 100%; margin: 5px 0; white-space: normal; }
 }
