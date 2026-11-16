@@ -18,11 +18,11 @@ class ViewServices{
         if (!empty($service['image'])) {
             echo '<img class="service-image" src="' .
                 ServiceImage::dataUri($service['image']) . '" alt="' .
-                htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8') . '">';
+                htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8') . '">';
         }
         echo '<div class="service-card-content">';
-        echo '<h2>' . htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8') . '</h2>';
-        echo '<p>' . htmlspecialchars($service['text'], ENT_QUOTES, 'UTF-8') . '</p>';
+        echo '<h2>' . htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8') . '</h2>';
+        echo '<p>' . htmlspecialchars(localized_service_description($service), ENT_QUOTES, 'UTF-8') . '</p>';
         echo '<div class="service-card-footer"><strong class="service-price">' .
             htmlspecialchars((string)$service['price'], ENT_QUOTES, 'UTF-8') .
             ' €</strong><a class="button-link" href="service?service_id=' .
@@ -36,11 +36,11 @@ class ViewServices{
         if (!empty($service['image'])) {
             echo '<img class="service-detail-image" src="' .
                 ServiceImage::dataUri($service['image']) . '" alt="' .
-                htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8') . '">';
+                htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8') . '">';
         }
         echo '<div class="service-detail-content"><h1>' .
-            htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8') . '</h1>';
-        echo '<p>' . htmlspecialchars($service['text'], ENT_QUOTES, 'UTF-8') . '</p>';
+            htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8') . '</h1>';
+        echo '<p>' . htmlspecialchars(localized_service_description($service), ENT_QUOTES, 'UTF-8') . '</p>';
         echo '<p class="service-price">' . htmlspecialchars((string)$service['price'], ENT_QUOTES, 'UTF-8') . ' €</p>';
         echo '</div></article>';
     }

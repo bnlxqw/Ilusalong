@@ -1,2 +1,0 @@
-ALTER TABLE services
-    MODIFY image MEDIUMBLOB NOT NULL;

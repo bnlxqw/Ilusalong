@@ -112,6 +112,52 @@ function language_text($text) {
         : $text;
 }
 
+function localized_service_title($service) {
+    $title = isset($service['title']) ? $service['title'] : '';
+    $titles = array(
+        'Naiste juukselõikus' => array('ru' => 'Женская стрижка', 'en' => "Women's haircut"),
+        'Klassikaline maniküür' => array('ru' => 'Классический маникюр', 'en' => 'Classic manicure'),
+        'Женская стрижка' => array('ru' => 'Женская стрижка', 'en' => "Women's haircut"),
+        'Классический маникюр' => array('ru' => 'Классический маникюр', 'en' => 'Classic manicure')
+    );
+
+    $language = current_language();
+    return isset($titles[$title][$language]) ? $titles[$title][$language] : $title;
+}
+
+function localized_service_description($service) {
+    $description = isset($service['text']) ? $service['text'] : '';
+    $descriptions = array(
+        'Kaasaegne juukselõikus koos pesu ja föönisoenguga.' => array(
+            'ru' => 'Современная стрижка с мытьём головы и укладкой феном.',
+            'en' => 'A modern haircut with a wash and blow-dry.'
+        ),
+        'Küünenahkade hooldus, küünte kuju korrigeerimine ja geellakkimine.' => array(
+            'ru' => 'Уход за кутикулой, коррекция формы ногтей и покрытие гель-лаком.',
+            'en' => 'Cuticle care, nail shaping, and gel polish.'
+        )
+    );
+
+    $language = current_language();
+    return isset($descriptions[$description][$language])
+        ? $descriptions[$description][$language]
+        : $description;
+}
+
+function localized_category_name($category) {
+    $name = is_array($category) && isset($category['name'])
+        ? $category['name']
+        : (string)$category;
+    $categories = array(
+        'Juuksur' => array('ru' => 'Парикмахерские услуги', 'en' => 'Hair'),
+        'Kosmeetik' => array('ru' => 'Косметология', 'en' => 'Beauty treatments'),
+        'Küüned' => array('ru' => 'Ногтевой сервис', 'en' => 'Nails')
+    );
+
+    $language = current_language();
+    return isset($categories[$name][$language]) ? $categories[$name][$language] : $name;
+}
+
 function language_switcher() {
     $path = isset($_SERVER['REQUEST_URI'])
         ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
