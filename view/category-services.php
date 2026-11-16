@@ -1,7 +1,7 @@
 <?php
 ob_start();
 ?>
-<h1>Category services</h1>
+<h1><?php echo language_text('Category services'); ?></h1>
 <br>
 <?php ViewServices::ServicesByCategory($arr);
 

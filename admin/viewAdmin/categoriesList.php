@@ -1,13 +1,13 @@
 <?php ob_start(); ?>
 <section class="admin-panel">
-    <h1>Service categories</h1>
+    <h1><?php echo language_text('Service categories'); ?></h1>
     <?php if (!$arr) { ?>
-        <p class="admin-empty">No service categories have been added yet.</p>
+        <p class="admin-empty"><?php echo language_text('No service categories have been added yet.'); ?></p>
     <?php } else { ?>
         <div class="table-responsive">
             <table class="table table-bordered admin-table">
                 <thead>
-                    <tr><th>Category ID</th><th>Name</th></tr>
+                    <tr><th><?php echo language_text('Category ID'); ?></th><th><?php echo language_text('Name'); ?></th></tr>
                 </thead>
                 <tbody>
                     <?php foreach ($arr as $category) { ?>

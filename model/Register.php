@@ -9,16 +9,16 @@ class Register{
             $name = $_POST['name'];
             $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
             if(!$email){
-                $errorString="Invalid email<br />";
+                $errorString="Invalid email";
             }
             $password = $_POST['password'];
             $confirm = $_POST['confirm'];
             if (!$password || !$confirm || mb_strlen($password) < 6)
             {
-                 $errorString="Password must be more than 6 characters<br />";
+                 $errorString="Password must be more than 6 characters";
             }
             if($password!=$confirm){
-                $errorString="Passwords do not match<br />";
+                $errorString="Passwords do not match";
             }
             if( mb_strlen($errorString)== 0 )
             {

@@ -2,12 +2,12 @@
 ob_start();
 ?>
 <div class="hero">
-    <p class="eyebrow">ILUSALONG · BEAUTY &amp; CARE</p>
-    <h1>Make time for yourself</h1>
-    <p>Professional care, a welcoming atmosphere, and attention to every detail.</p>
-    <a class="button-link" href="services">Explore services</a>
+    <p class="eyebrow"><?php echo language_text('ILUSALONG · BEAUTY &amp; CARE'); ?></p>
+    <h1><?php echo language_text('Make time for yourself'); ?></h1>
+    <p><?php echo language_text('Professional care, a welcoming atmosphere, and attention to every detail.'); ?></p>
+    <a class="button-link" href="services"><?php echo language_text('Explore services'); ?></a>
 </div>
-<h2 class="section-title">Popular services</h2>
+<h2 class="section-title"><?php echo language_text('Popular services'); ?></h2>
 <br>
 <?php
 ViewServices::ServicesByCategory($arr);

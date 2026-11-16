@@ -2,6 +2,11 @@
   var maximumBytes = 512 * 1024;
   var startingQuality = 0.82;
   var maximumDimension = 1600;
+  var isRussian = document.documentElement.lang === 'ru';
+
+  function message(english, russian) {
+    return isRussian ? russian : english;
+  }
 
   function compressImage(file) {
     return new Promise(function (resolve, reject) {
@@ -17,7 +22,7 @@
         var context = canvas.getContext('2d');
 
         if (!context) {
-          reject(new Error('Your browser could not prepare this image.'));
+          reject(new Error(message('Your browser could not prepare this image.', 'Не удалось подготовить изображение в этом браузере.')));
           return;
         }
 
@@ -28,7 +33,7 @@
         function encode(quality) {
           canvas.toBlob(function (blob) {
             if (!blob) {
-              reject(new Error('Your browser could not compress this image.'));
+              reject(new Error(message('Your browser could not compress this image.', 'Не удалось сжать изображение в этом браузере.')));
               return;
             }
             if (blob.size <= maximumBytes) {
@@ -53,7 +58,7 @@
               encode(startingQuality);
               return;
             }
-            reject(new Error('This image is too detailed to compress below 512 KB.'));
+            reject(new Error(message('This image is too detailed to compress below 512 KB.', 'Изображение слишком детализировано, чтобы сжать его до 512 КБ.')));
           }, 'image/jpeg', quality);
         }
 
@@ -67,7 +72,7 @@
 
       image.onerror = function () {
         URL.revokeObjectURL(source);
-        reject(new Error('This image could not be opened.'));
+        reject(new Error(message('This image could not be opened.', 'Не удалось открыть это изображение.')));
       };
       image.src = source;
     });
@@ -82,19 +87,19 @@
     var file = input.files[0];
     var status = input.parentNode.querySelector('.image-upload-status');
     if (!file.type || file.type.indexOf('image/') !== 0) {
-      if (status) status.textContent = 'Choose an image file.';
+      if (status) status.textContent = message('Choose an image file.', 'Выберите файл изображения.');
       input.value = '';
       return;
     }
 
-    if (status) status.textContent = 'Optimizing image…';
+    if (status) status.textContent = message('Optimizing image…', 'Подготовка изображения…');
     input.disabled = true;
     compressImage(file).then(function (compressedFile) {
       var transfer = new DataTransfer();
       transfer.items.add(compressedFile);
       input.files = transfer.files;
       if (status) {
-        status.textContent = 'Ready: ' + Math.round(compressedFile.size / 1024) + ' KB.';
+        status.textContent = message('Ready: ', 'Готово: ') + Math.round(compressedFile.size / 1024) + ' KB.';
       }
     }).catch(function (error) {
       input.value = '';

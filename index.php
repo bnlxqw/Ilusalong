@@ -2,6 +2,7 @@
 session_start();
 include_once 'inc/Database.php';
 include_once 'inc/ServiceImage.php';
+include_once 'inc/Language.php';
 require 'model/Category.php';
 require 'model/Services.php';
 require 'model/Reviews.php';

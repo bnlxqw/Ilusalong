@@ -1,7 +1,7 @@
 <?php
 ob_start();
 ?>
-<h1>All services</h1>
+<h1><?php echo language_text('All services'); ?></h1>
 <br>
 
 <?php

@@ -6,8 +6,8 @@ if(isset($result)){
     {
         ?>
         <section class="notice notice-success">
-            <strong>Account created.</strong>
-            <a href="./">Home</a>
+            <strong><?php echo language_text('Account created.'); ?></strong>
+            <a href="./"><?php echo language_text('Home'); ?></a>
         </section>
         <?php
     }
@@ -15,9 +15,9 @@ if(isset($result)){
     {
         ?>
         <section class="notice notice-error">
-            <strong>Registration failed.</strong>
-            <?php echo htmlspecialchars($result[1], ENT_QUOTES, 'UTF-8'); ?>
-            <a href="registerForm">Back to registration</a>
+            <strong><?php echo language_text('Registration failed.'); ?></strong>
+            <?php echo nl2br(htmlspecialchars(language_text(strip_tags($result[1])), ENT_QUOTES, 'UTF-8')); ?>
+            <a href="registerForm"><?php echo language_text('Back to registration'); ?></a>
         </section>
         <?php
     }

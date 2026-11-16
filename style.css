@@ -62,6 +62,32 @@ a:hover { color: var(--ink); }
 .topmenu > li > a { color: var(--ink); font-size: 14px; }
 .topmenu > li > a:hover { color: var(--rose-dark); }
 
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  background: var(--blush);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.language-switch a {
+  min-width: 34px;
+  padding: 5px 8px;
+  border-radius: 16px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.language-switch a[aria-current="page"] {
+  background: var(--white);
+  color: var(--rose-dark);
+  box-shadow: 0 2px 6px rgba(100, 70, 67, .1);
+}
+
 .submenu {
   position: absolute;
   top: 100%;
