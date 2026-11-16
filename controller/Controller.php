@@ -75,6 +75,56 @@ class Controller {
         include_once('view/answerRegister.php');
     }
 
+    public static function loginForm() {
+        if (UserAuth::isAuthenticated()) {
+            header('Location: myProfile');
+            exit;
+        }
+        if (isset($_SESSION['auth_flash'])) {
+            $error = $_SESSION['auth_flash'];
+            unset($_SESSION['auth_flash']);
+        }
+        include_once 'view/login.php';
+    }
+
+    public static function userLogin() {
+        $error = null;
+        if (UserAuth::login($error)) {
+            header('Location: myProfile');
+            exit;
+        }
+        include_once 'view/login.php';
+    }
+
+    public static function myProfile() {
+        $profile = UserAuth::getProfile();
+        if (!$profile) {
+            header('Location: login');
+            exit;
+        }
+        include_once 'view/profile.php';
+    }
+
+    public static function userLogout() {
+        $error = null;
+        if (!UserAuth::logout($error)) {
+            if (!UserAuth::isAuthenticated()) {
+                $_SESSION['auth_flash'] = $error;
+                header('Location: login');
+                exit;
+            }
+            $profile = UserAuth::getProfile();
+            if (!$profile) {
+                header('Location: login');
+                exit;
+            }
+            include_once 'view/profile.php';
+            return;
+        }
+        header('Location: ./');
+        exit;
+    }
+
     public static function myBookings() {
         $arr = Booking::getBookingsByUser();
         ob_start();

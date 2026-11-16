@@ -65,6 +65,16 @@ a:hover { color: var(--ink); }
 .topmenu a { display: block; padding: 12px 15px; }
 .topmenu > li > a { color: var(--ink); font-size: 14px; }
 .topmenu > li > a:hover { color: var(--rose-dark); }
+.nav-logout-form { margin: 0; }
+.nav-logout-button {
+  min-height: 0;
+  padding: 12px 15px;
+  background: transparent;
+  border-radius: 0;
+  color: var(--ink);
+  font-size: 14px;
+}
+.nav-logout-button:hover { transform: none; background: transparent; color: var(--rose-dark); box-shadow: none; }
 
 .language-switch {
   display: inline-flex;
@@ -272,6 +282,24 @@ a:hover { color: var(--ink); }
 .review-form button, .register-form button, .booking-form button { max-width: 100%; white-space: normal; }
 
 .register-form { margin-top: 20px; }
+.account-prompt { margin-top: 14px; color: var(--muted); }
+.profile-page h1 { margin: 0 0 22px; font: 500 clamp(32px, 5vw, 46px)/1.15 Georgia, serif; }
+.profile-card {
+  max-width: 620px;
+  padding: 24px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+.profile-details { margin: 0 0 22px; }
+.profile-details > div { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.profile-details > div:first-child { padding-top: 0; }
+.profile-details > div:last-child { border-bottom: 0; }
+.profile-details dt { color: var(--muted); font-size: 13px; font-weight: 600; }
+.profile-details dd { margin: 3px 0 0; overflow-wrap: anywhere; }
+.profile-logout-form { display: inline-block; margin: 0 0 0 8px; }
+.profile-logout-form button { min-height: 44px; }
 .booking-section, .bookings-page { margin-top: 34px; }
 .booking-section h2, .bookings-page h1 { font-weight: 500; }
 .booking-form label { margin-top: 4px; }
@@ -322,6 +350,7 @@ textarea { resize: vertical; }
   .brand { font-size: 22px; }
   .topmenu { order: 3; width: 100%; flex-wrap: wrap; gap: 0; }
   .topmenu a { padding: 9px 10px; }
+  .nav-logout-button { padding: 9px 10px; }
   .has-submenu {
     display: grid;
     flex: 1 0 100%;

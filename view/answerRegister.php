@@ -7,7 +7,7 @@ if(isset($result)){
         ?>
         <section class="notice notice-success">
             <strong><?php echo language_text('Account created.'); ?></strong>
-            <a href="./"><?php echo language_text('Home'); ?></a>
+            <a href="login"><?php echo language_text('Log in'); ?></a>
         </section>
         <?php
     }

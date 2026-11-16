@@ -6,33 +6,41 @@ class Register{
         if(isset($_POST['save']))
         {
             $errorString="";
-            $name = $_POST['name'];
-            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-            if(!$email){
+            $name = trim($_POST['name']);
+            $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+            if ($name === '' || !preg_match('/^.{1,100}$/us', $name)) {
+                $errorString="Enter your name (up to 100 characters).";
+            }
+            if(!$email || strlen($email) > 50){
                 $errorString="Invalid email";
             }
             $password = $_POST['password'];
             $confirm = $_POST['confirm'];
-            if (!$password || !$confirm || mb_strlen($password) < 6)
+            if (!$password || !$confirm || strlen($password) < 6)
             {
                  $errorString="Password must be more than 6 characters";
             }
-            if($password!=$confirm){
+            if($password !== $confirm){
                 $errorString="Passwords do not match";
             }
             if( mb_strlen($errorString)== 0 )
             {
-                $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                $date=Date("Y-m-d");
-
-                $sql="INSERT INTO `users` (`username`, `email`, `password`, `status`,
-                `registration_date`) VALUES (:name, :email, :password, 'user', :date)";
                 $db = new Database();
+                $existing = $db->getOne(
+                    'SELECT user_id FROM users WHERE LOWER(email) = LOWER(:email) LIMIT 1',
+                    array(':email' => $email)
+                );
+                if ($existing) {
+                    return array(0 => false, 1 => 'An account with this email already exists.');
+                }
+
+                $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $sql="INSERT INTO `users` (`username`, `email`, `password`, `status`, `pass`)
+                      VALUES (:name, :email, :password, 'user', '')";
                 $item = $db->executeRun($sql, array(
                     ':name' => $name,
                     ':email' => $email,
-                    ':password' => $passwordHash,
-                    ':date' => $date
+                    ':password' => $passwordHash
                 ));
                     if($item)
                         $controll=array(0=>true);

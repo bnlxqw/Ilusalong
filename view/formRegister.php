@@ -19,6 +19,7 @@
     </div>
     <button type="submit" name="save"><?php echo language_text('Register'); ?></button>
 </form>
+<p class="account-prompt"><?php echo language_text('Already have an account?'); ?> <a href="login"><?php echo language_text('Log in'); ?></a></p>
 <?php
 $content = ob_get_clean();
 include_once 'view/layout.php';

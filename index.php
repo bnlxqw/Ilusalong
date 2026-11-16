@@ -9,6 +9,7 @@ require 'model/Reviews.php';
 require 'model/Register.php';
 require 'model/Booking.php';
 require 'model/Specialist.php';
+require 'model/UserAuth.php';
 
 include_once 'view/services.php';
 include_once 'view/reviews.php';

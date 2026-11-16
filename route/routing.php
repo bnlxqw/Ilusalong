@@ -44,6 +44,18 @@ elseif ($path == 'registerAnswer' )
 
     $response = Controller::registerUser();
 }
+elseif ($path == 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = Controller::userLogin();
+}
+elseif ($path == 'login') {
+    $response = Controller::loginForm();
+}
+elseif ($path == 'myProfile') {
+    $response = Controller::myProfile();
+}
+elseif ($path == 'logout' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = Controller::userLogout();
+}
 
     else{
             $response = Controller::error404();
