@@ -45,8 +45,19 @@ class Controller {
     }
 
         public static function InsertReview($text, $id) {
-        Reviews::insertReview($text, $id);
-        header('Location:service?service_id='.$id.'#reviews');
+        $error = null;
+        $ok    = Reviews::insertReview($text, $id, $error);
+        $_SESSION['review_flash'] = array(
+            'type'    => $ok ? 'success' : 'error',
+            'message' => $ok ? 'Review submitted.' : ($error ?? 'Could not submit review.'),
+        );
+        $serviceId = filter_var($id, FILTER_VALIDATE_INT);
+        if ($serviceId && $serviceId > 0) {
+            header('Location: service?service_id=' . $serviceId . '#reviews');
+        } else {
+            header('Location: services');
+        }
+        exit;
     }
 
         public static function Reviews($serviceId) {

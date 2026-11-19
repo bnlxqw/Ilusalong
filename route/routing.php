@@ -29,7 +29,8 @@
     elseif($path == 'cancelBooking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = Controller::cancelBooking();
     }
-    elseif($path == 'insertreview' && isset($_POST['review'], $_POST['service_id']))
+    elseif($path == 'insertreview' && $_SERVER['REQUEST_METHOD'] === 'POST'
+        && isset($_POST['review'], $_POST['service_id']))
     {
         $response = Controller::InsertReview($_POST['review'], $_POST['service_id']);
     }
