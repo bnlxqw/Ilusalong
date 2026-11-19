@@ -5,15 +5,24 @@ class database {
     private $user;
     private $password;
     private $baseName;
+    private $charset;
 
     function __construct() {
-        $this->host = 'localhost';
-        $this->user = 'root';
-        $this->password = '';
-        $this->baseName = 'ilusalong';
+        $configFile = __DIR__ . '/../config/db.php';
+        if (!is_file($configFile)) {
+            error_log('Database config file not found: ' . $configFile);
+            http_response_code(503);
+            die('Service temporarily unavailable.');
+        }
+        $cfg = require $configFile;
+        $this->host     = $cfg['host'];
+        $this->user     = $cfg['user'];
+        $this->password = $cfg['password'];
+        $this->baseName = $cfg['dbname'];
+        $this->charset  = $cfg['charset'] ?? 'utf8mb4';
         $this->connect();
     }
-    
+
     function __destruct() {
         $this->disconnect();
     }
@@ -21,10 +30,18 @@ class database {
     function connect() {
         if (!$this->conn) {
             try {
-                $this->conn = new PDO('mysql:host='.$this->host.';dbname='.$this->baseName.'', $this->user, $this->password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-            } 
-            catch (Exception $e) {
-                die('Connection failed : ' . $e->getMessage());
+                $dsn = 'mysql:host=' . $this->host
+                     . ';dbname='    . $this->baseName
+                     . ';charset='   . $this->charset;
+                $this->conn = new PDO($dsn, $this->user, $this->password, [
+                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES   => false,
+                ]);
+            } catch (Exception $e) {
+                error_log('Database connection error: ' . $e->getMessage());
+                http_response_code(503);
+                die('Service temporarily unavailable.');
             }
         }
         return $this->conn;
@@ -39,17 +56,13 @@ class database {
     function getOne($query, $params = array()) {
         $stmt = $this->conn->prepare($query);
         $stmt->execute($params);
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $response = $stmt->fetch();
-        return $response;
+        return $stmt->fetch();
     }
 
     function getAll($query, $params = array()) {
         $stmt = $this->conn->prepare($query);
         $stmt->execute($params);
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $response = $stmt->fetchAll();
-        return $response;
+        return $stmt->fetchAll();
     }
 
     function executeRun($query, $params = array()) {

@@ -1,0 +1,2 @@
+# Database credentials — never commit the real config file
+config/db.php
