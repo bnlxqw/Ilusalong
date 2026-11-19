@@ -137,6 +137,10 @@ class Controller {
     }
 
     public static function myBookings() {
+        if (!UserAuth::getProfile()) {
+            header('Location: login');
+            exit;
+        }
         $arr = Booking::getBookingsByUser();
         ob_start();
         ViewBookings::MyBookings($arr);

@@ -3,6 +3,13 @@ class ViewBookings {
     public static function BookingForm($serviceId, $specialists) {
         echo '<section class="booking-section" id="booking"><h2>' . language_text('Book this service') . '</h2>';
         self::FlashMessage();
+        $profile = UserAuth::getProfile();
+        if (!$profile) {
+            echo '<p class="notice">' . language_text('Please log in to book a service.') .
+                ' <a href="login">' . language_text('Log in') . '</a> · ' .
+                '<a href="registerForm">' . language_text('Register') . '</a></p></section>';
+            return;
+        }
         if (!$specialists) {
             echo '<p class="notice notice-error">' . language_text('No specialists are currently available for booking.') . '</p></section>';
             return;

@@ -51,6 +51,8 @@ function language_text($text) {
         'Enter your name (up to 100 characters).' => 'Введите имя (не более 100 символов).',
         'My bookings' => 'Мои бронирования',
         'Book this service' => 'Записаться на услугу',
+        'Please log in to book a service.' => 'Чтобы записаться на услугу, войдите в аккаунт.',
+        'Please log in to view your bookings.' => 'Чтобы посмотреть записи, войдите в аккаунт.',
         'Phone number' => 'Номер телефона',
         'Date and time' => 'Дата и время',
         'Book now' => 'Забронировать',

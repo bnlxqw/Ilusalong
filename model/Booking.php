@@ -15,6 +15,12 @@ class Booking {
     }
 
     public static function createBooking(&$error = null) {
+        $profile = UserAuth::getProfile();
+        if (!$profile) {
+            $error = 'Please log in to book a service.';
+            return false;
+        }
+
         if (!isset($_POST['createBooking'], $_POST['service_id'], $_POST['specialist_id'], $_POST['customer_name'],
             $_POST['customer_email'], $_POST['customer_phone'], $_POST['booking_date'])) {
             $error = 'Please complete all booking fields.';
@@ -80,8 +86,9 @@ class Booking {
         $query = "INSERT INTO bookings
                     (user_id, session_token_hash, service_id, specialist_id, customer_name, customer_email, customer_phone, booking_date, status)
                   VALUES
-                    (NULL, :session_token_hash, :service_id, :specialist_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
+                    (:user_id, :session_token_hash, :service_id, :specialist_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
         return $db->executeRun($query, array(
+            ':user_id' => (int)$profile['user_id'],
             ':session_token_hash' => self::getSessionTokenHash(),
             ':service_id' => $serviceId,
             ':specialist_id' => $specialistId,
@@ -93,6 +100,11 @@ class Booking {
     }
 
     public static function getBookingsByUser() {
+        $profile = UserAuth::getProfile();
+        if (!$profile) {
+            return array();
+        }
+
         $query = "SELECT bookings.booking_id, bookings.service_id, bookings.specialist_id,
                          specialists.name AS specialist_name, bookings.customer_name,
                          bookings.customer_email, bookings.customer_phone, bookings.booking_date,
@@ -100,15 +112,23 @@ class Booking {
                   FROM bookings
                   LEFT JOIN services ON bookings.service_id = services.service_id
                   LEFT JOIN specialists ON bookings.specialist_id = specialists.specialist_id
-                  WHERE bookings.session_token_hash = :session_token_hash
+                  WHERE bookings.user_id = :user_id
+                     OR (bookings.user_id IS NULL AND bookings.session_token_hash = :session_token_hash)
                   ORDER BY bookings.booking_date DESC, bookings.booking_id DESC";
         $db = new Database();
         return $db->getAll($query, array(
+            ':user_id' => (int)$profile['user_id'],
             ':session_token_hash' => self::getSessionTokenHash()
         ));
     }
 
     public static function cancelBooking($bookingId, &$error = null) {
+        $profile = UserAuth::getProfile();
+        if (!$profile) {
+            $error = 'Please log in to view your bookings.';
+            return false;
+        }
+
         if (!isset($_POST['csrf_token'], $_SESSION['booking_csrf_token'])
             || !hash_equals($_SESSION['booking_csrf_token'], (string)$_POST['csrf_token'])) {
             $error = 'Your session expired. Please try again.';
@@ -126,12 +146,16 @@ class Booking {
             "UPDATE bookings
              SET status = 'cancelled'
              WHERE booking_id = :booking_id
-               AND session_token_hash = :session_token_hash
+               AND (
+                    user_id = :user_id
+                    OR (user_id IS NULL AND session_token_hash = :legacy_session_token_hash)
+               )
                AND status = 'active'
                AND booking_date > NOW()",
             array(
                 ':booking_id' => $bookingId,
-                ':session_token_hash' => self::getSessionTokenHash()
+                ':user_id' => (int)$profile['user_id'],
+                ':legacy_session_token_hash' => self::getSessionTokenHash()
             )
         );
         if ($affected < 1) {
