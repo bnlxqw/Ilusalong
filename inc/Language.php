@@ -58,6 +58,8 @@ function language_text($text) {
         'See booked dates and times' => 'Посмотреть занятые даты и время',
         'No upcoming bookings.' => 'Предстоящих записей нет.',
         'Choose a time' => 'Выберите время',
+        'Select a date first' => 'Сначала выберите дату',
+        'Booked' => 'Занято',
         'Previous month' => 'Предыдущий месяц',
         'Next month' => 'Следующий месяц',
         'Booking calendar' => 'Календарь записи',

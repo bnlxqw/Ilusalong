@@ -27,6 +27,36 @@ document.addEventListener('DOMContentLoaded', function () {
         : [];
     }
 
+    function renderAvailableTimes() {
+      timeInput.replaceChildren();
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = selectedDate
+        ? calendar.dataset.chooseTime
+        : calendar.dataset.chooseDateFirst;
+      timeInput.appendChild(placeholder);
+
+      const canChooseTime = Boolean(specialistSelect.value && selectedDate);
+      timeInput.disabled = !canChooseTime;
+      if (!canChooseTime) return;
+
+      const busyTimes = bookedTimesFor(selectedDate);
+      for (let minute = 8 * 60; minute <= 19 * 60; minute += 1) {
+        const time = String(Math.floor(minute / 60)).padStart(2, '0') + ':' +
+          String(minute % 60).padStart(2, '0');
+        const option = document.createElement('option');
+        option.value = time;
+        option.textContent = time;
+        const isBooked = busyTimes.indexOf(time) !== -1;
+        const isPast = new Date(selectedDate + 'T' + time) <= new Date();
+        option.disabled = isBooked || isPast;
+        if (isBooked) {
+          option.textContent += ' — ' + calendar.dataset.timeBookedLabel;
+        }
+        timeInput.appendChild(option);
+      }
+    }
+
     function renderSelectedDate() {
       const specialistId = specialistSelect.value;
       bookedTimesContainer.replaceChildren();
@@ -53,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         busyTimes.forEach(function (time) {
           const chip = document.createElement('span');
           chip.className = 'calendar-booked-time';
+          chip.setAttribute('aria-disabled', 'true');
           chip.textContent = time;
           bookedTimesContainer.appendChild(chip);
         });
@@ -102,7 +133,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         button.addEventListener('click', function () {
           selectedDate = dateKey;
+          timeInput.value = '';
           dateInput.value = '';
+          timeInput.setCustomValidity('');
+          renderAvailableTimes();
           renderCalendar();
           renderSelectedDate();
         });
@@ -142,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
       timeInput.value = '';
       dateInput.value = '';
       timeInput.setCustomValidity('');
+      renderAvailableTimes();
       renderCalendar();
       renderSelectedDate();
     });
@@ -150,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
     timeInput.addEventListener('change', updateBookingDate);
     calendar.querySelector('[data-calendar-prev]').addEventListener('click', function () {
       displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() - 1, 1);
+      renderAvailableTimes();
       renderCalendar();
     });
     calendar.querySelector('[data-calendar-next]').addEventListener('click', function () {

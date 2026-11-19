@@ -357,7 +357,7 @@ a:hover { color: var(--ink); }
 .calendar-status.is-unavailable { color: var(--rose-dark); font-weight: 600; }
 .calendar-status.is-available { color: #4c674d; font-weight: 600; }
 .calendar-booked-times { display: flex; flex-wrap: wrap; gap: 6px; }
-.calendar-booked-time { padding: 3px 9px; background: #fde4e4; border: 1px solid #e8b3b0; border-radius: 14px; color: #a61b1b; font-size: 13px; font-weight: 700; }
+.calendar-booked-time { padding: 3px 9px; background: #ecebed; border: 1px solid #d5d3d6; border-radius: 14px; color: #68666a; font-size: 13px; font-weight: 700; }
 .booking-calendar + label { margin-top: 2px; }
 .booking-form label { margin-top: 4px; }
 .bookings-table { width: 100%; max-width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }

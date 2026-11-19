@@ -30,7 +30,9 @@ class ViewBookings {
         self::BookingCalendar($bookedSlots);
         echo '
             <label for="booking-time">' . language_text('Choose a time') . '</label>
-            <input id="booking-time" type="time" required>
+            <select id="booking-time" required disabled>
+                <option value="">' . language_text('Select a date first') . '</option>
+            </select>
             <input id="booking-date" name="booking_date" type="hidden">
             <label for="booking-name">' . language_text('Name') . '</label>
             <input id="booking-name" name="customer_name" type="text" maxlength="100" autocomplete="name" required>
@@ -39,7 +41,7 @@ class ViewBookings {
             <label for="booking-phone">' . language_text('Phone number') . '</label>
             <input id="booking-phone" name="customer_phone" type="tel" maxlength="32" autocomplete="tel" required>
             <button type="submit" name="createBooking">' . language_text('Book now') . '</button>
-        </form><script defer src="booking-calendar.js?v=3"></script></section>';
+        </form><script defer src="booking-calendar.js?v=6"></script></section>';
     }
 
     private static function BookingCalendar($bookedSlots) {
@@ -68,6 +70,9 @@ class ViewBookings {
             '" data-time-taken="' . htmlspecialchars(language_text('This time is already booked. Choose another time.'), ENT_QUOTES, 'UTF-8') .
             '" data-time-available="' . htmlspecialchars(language_text('This time is available.'), ENT_QUOTES, 'UTF-8') .
             '" data-time-past="' . htmlspecialchars(language_text('Choose a future date and time.'), ENT_QUOTES, 'UTF-8') .
+            '" data-time-booked-label="' . htmlspecialchars(language_text('Booked'), ENT_QUOTES, 'UTF-8') .
+            '" data-choose-time="' . htmlspecialchars(language_text('Choose a time'), ENT_QUOTES, 'UTF-8') .
+            '" data-choose-date-first="' . htmlspecialchars(language_text('Select a date first'), ENT_QUOTES, 'UTF-8') .
             '">
             <div class="calendar-header">
                 <button class="calendar-month-button" type="button" data-calendar-prev aria-label="' .
