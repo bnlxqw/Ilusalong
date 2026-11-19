@@ -115,17 +115,25 @@ document.addEventListener('DOMContentLoaded', function () {
       const hasSelection = selectedDate && timeInput.value;
       dateInput.value = hasSelection ? selectedDate + 'T' + timeInput.value : '';
       const isBooked = hasSelection && busyTimes.indexOf(timeInput.value) !== -1;
+      if (isBooked) {
+        timeInput.value = '';
+        dateInput.value = '';
+        timeInput.setCustomValidity(calendar.dataset.timeTaken);
+        status.textContent = calendar.dataset.timeTaken;
+        status.classList.add('is-booked');
+        status.classList.remove('is-unavailable', 'is-available');
+        return;
+      }
+
       const isPast = hasSelection && new Date(dateInput.value) <= new Date();
       timeInput.setCustomValidity(
-        isBooked ? calendar.dataset.timeTaken : (isPast ? calendar.dataset.timePast : '')
+        isPast ? calendar.dataset.timePast : ''
       );
       if (hasSelection) {
-        status.textContent = isBooked
-          ? calendar.dataset.timeTaken
-          : (isPast ? calendar.dataset.timePast : calendar.dataset.timeAvailable);
-        status.classList.toggle('is-booked', isBooked);
+        status.textContent = isPast ? calendar.dataset.timePast : calendar.dataset.timeAvailable;
+        status.classList.remove('is-booked');
         status.classList.toggle('is-unavailable', isPast && !isBooked);
-        status.classList.toggle('is-available', !isBooked && !isPast);
+        status.classList.toggle('is-available', !isPast);
       }
     }
 
@@ -139,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     timeInput.addEventListener('input', updateBookingDate);
+    timeInput.addEventListener('change', updateBookingDate);
     calendar.querySelector('[data-calendar-prev]').addEventListener('click', function () {
       displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() - 1, 1);
       renderCalendar();

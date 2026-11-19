@@ -39,7 +39,7 @@ class ViewBookings {
             <label for="booking-phone">' . language_text('Phone number') . '</label>
             <input id="booking-phone" name="customer_phone" type="tel" maxlength="32" autocomplete="tel" required>
             <button type="submit" name="createBooking">' . language_text('Book now') . '</button>
-        </form><script defer src="booking-calendar.js?v=2"></script></section>';
+        </form><script defer src="booking-calendar.js?v=3"></script></section>';
     }
 
     private static function BookingCalendar($bookedSlots) {
