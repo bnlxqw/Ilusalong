@@ -21,6 +21,15 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 
 .admin-nav .topmenu { gap: 2px; }
 .admin-nav .admin-user { display: block; padding: 12px 15px; color: var(--admin-muted); font-size: 14px; }
+.admin-logout-form { margin: 0; }
+.admin-logout-button {
+  padding: 12px 15px;
+  background: transparent;
+  border-radius: 0;
+  color: var(--admin-ink);
+  font: inherit;
+}
+.admin-logout-button:hover { transform: none; background: transparent; color: var(--admin-rose-dark); box-shadow: none; }
 
 .admin-content { min-height: 68vh; padding-top: 34px; }
 .admin-content h1, .admin-content h2 { margin: 0 0 22px; color: var(--admin-ink); font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
@@ -128,6 +137,7 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
   .admin-nav { align-items: center; flex-direction: row; flex-wrap: wrap; }
   .admin-nav .topmenu { order: 3; width: 100%; flex-wrap: wrap; }
   .admin-nav .admin-user { padding: 9px 10px; }
+  .admin-logout-button { padding: 9px 10px; }
   .admin-content { padding-top: 24px; }
   .admin-panel, .admin-content > .container, .admin-content > article { width: 100%; max-width: 100%; margin-right: 0; margin-left: 0; padding: 18px; }
   .admin-content .table > tbody > tr > td, .admin-content .table > thead > tr > th { padding: 10px; }

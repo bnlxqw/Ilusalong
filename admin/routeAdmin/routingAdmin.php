@@ -8,16 +8,34 @@ if ($path == '' OR $path == 'index.php' )
     $response = controllerAdmin::formLoginSite();
 }
 
+elseif ($path == 'login' && $_SERVER['REQUEST_METHOD'] === 'POST')
+{
+    if (!modelAdmin::validateCsrfToken()) {
+        $response = controllerAdmin::requestRejected();
+    } else {
+        $response = controllerAdmin::loginAction();
+    }
+}
 elseif ($path == 'login')
 {
-    $response = controllerAdmin::loginAction();
+    $response = controllerAdmin::formLoginSite();
 }
 elseif ($path == 'logout')
 {
-    $response = controllerAdmin::logoutAction();
+    if (!controllerAdmin::requireAdmin()) {
+        $response = null;
+    } elseif ($_SERVER['REQUEST_METHOD'] !== 'POST' || !modelAdmin::validateCsrfToken()) {
+        $response = controllerAdmin::requestRejected();
+    } else {
+        $response = controllerAdmin::logoutAction();
+    }
 }
 elseif (!controllerAdmin::requireAdmin()) {
     $response = null;
+}
+elseif (modelAdmin::isMutationRoute($path)
+    && ($_SERVER['REQUEST_METHOD'] !== 'POST' || !modelAdmin::validateCsrfToken())) {
+    $response = controllerAdmin::requestRejected();
 }
 elseif ($path == 'categoriesAdmin') {
     $response = controllerAdmin::categoriesList();

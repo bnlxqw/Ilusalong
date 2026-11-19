@@ -23,6 +23,7 @@ if (isset($test)) {
 ?>
 
 <form method="POST" action="serviceAddResult" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(modelAdmin::getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
     <table class="table table-bordered">
         <tr>
             <td><?php echo language_text('Service name'); ?></td>

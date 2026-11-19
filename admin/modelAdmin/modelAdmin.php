@@ -1,5 +1,31 @@
 <?php
 class modelAdmin{
+    public static function getCsrfToken() {
+        if (!isset($_SESSION['admin_csrf_token'])) {
+            $_SESSION['admin_csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['admin_csrf_token'];
+    }
+
+    public static function validateCsrfToken() {
+        return isset($_POST['csrf_token'], $_SESSION['admin_csrf_token'])
+            && hash_equals($_SESSION['admin_csrf_token'], (string)$_POST['csrf_token']);
+    }
+
+    public static function isMutationRoute($path) {
+        return in_array($path, array(
+            'categoryAddResult',
+            'categoryEditResult',
+            'categoryDeleteResult',
+            'specialistAddResult',
+            'specialistEditResult',
+            'specialistDeleteResult',
+            'serviceAddResult',
+            'serviceEditResult',
+            'serviceDelResult'
+        ), true);
+    }
+
     public static function isAdminAuthenticated() {
         return isset($_SESSION['sessionId'], $_SESSION['user_id'], $_SESSION['status'])
             && $_SESSION['status'] === 'admin'
@@ -63,6 +89,7 @@ class modelAdmin{
         $_SESSION['user_id'] = (int)$user['user_id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['status'] = $user['status'];
+        $_SESSION['admin_csrf_token'] = bin2hex(random_bytes(32));
         return true;
     }
 
@@ -71,6 +98,7 @@ class modelAdmin{
         unset($_SESSION['user_id']);
         unset($_SESSION['username']);
         unset($_SESSION['status']);
+        unset($_SESSION['admin_csrf_token']);
         session_regenerate_id(true);
     }
 }

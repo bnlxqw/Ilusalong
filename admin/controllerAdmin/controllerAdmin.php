@@ -24,6 +24,14 @@ class ControllerAdmin {
         include_once('viewAdmin/error404.php');
     }
 
+    public static function requestRejected() {
+        http_response_code(403);
+        $content = '<section class="admin-panel"><div class="alert alert-warning">' .
+            htmlspecialchars(language_text('Invalid or expired request token. Please reload and try again.'), ENT_QUOTES, 'UTF-8') .
+            '</div></section>';
+        include 'viewAdmin/templates/layout.php';
+    }
+
     public static function requireAdmin() {
         if (!modelAdmin::isAdminAuthenticated()) {
             $_SESSION['errorString'] = 'Please sign in with an administrator account.';

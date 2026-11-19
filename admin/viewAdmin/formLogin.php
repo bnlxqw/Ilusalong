@@ -19,6 +19,7 @@ if (modelAdmin::isAdminAuthenticated()) {
       <form class="form-signin" action="login" method="POST">
         <h1 class="form-signin-heading"><?php echo language_text('Admin sign in'); ?></h1>
         <p class="login-intro"><?php echo language_text('Sign in to manage salon services.'); ?></p>
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(modelAdmin::getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
         <label for="email"><?php echo language_text('Email'); ?></label>
         <input id="email" type="email" name="email" placeholder="<?php echo htmlspecialchars(language_text('Email address'), ENT_QUOTES, 'UTF-8'); ?>" autocomplete="username" required autofocus>
         <label for="password"><?php echo language_text('Password'); ?></label>

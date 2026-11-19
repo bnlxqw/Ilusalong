@@ -15,6 +15,7 @@
 
     <h2><?php echo language_text('Add specialist'); ?></h2>
     <form method="POST" action="specialistAddResult" class="specialist-admin-form">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(modelAdmin::getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
         <label for="specialist-name"><?php echo language_text('Name'); ?></label>
         <input id="specialist-name" class="form-control" type="text" name="name" maxlength="100" required>
         <label for="specialist-specialty"><?php echo language_text('Specialty'); ?></label>
@@ -40,6 +41,7 @@
                         <tr>
                             <td data-label="<?php echo htmlspecialchars(language_text('Name'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <form id="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" method="POST" action="specialistEditResult" class="specialist-edit-form">
+                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(modelAdmin::getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
                                     <input type="hidden" name="specialist_id" value="<?php echo (int)$specialist['specialist_id']; ?>">
                                 </form>
                                 <input form="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" class="form-control" type="text" name="name" maxlength="100" required value="<?php echo htmlspecialchars($specialist['name'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars(language_text('Name'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -54,6 +56,7 @@
                                 <button form="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" class="btn btn-primary specialist-save-button" type="submit" name="saveSpecialist" aria-label="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>"><span class="action-label"><?php echo language_text('Save changes'); ?></span><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
                                 <form method="POST" action="specialistDeleteResult" class="specialist-delete-form" onsubmit="return confirm('<?php echo htmlspecialchars(language_text('Delete this specialist?'), ENT_QUOTES, 'UTF-8'); ?>');">
                                     <input type="hidden" name="specialist_id" value="<?php echo (int)$specialist['specialist_id']; ?>">
+                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(modelAdmin::getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
                                     <button class="btn btn-primary specialist-delete-button" type="submit" name="deleteSpecialist" aria-label="<?php echo htmlspecialchars(language_text('Delete'), ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars(language_text('Delete'), ENT_QUOTES, 'UTF-8'); ?>"><span class="action-label"><?php echo language_text('Delete'); ?></span><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                                 </form>
                             </td>

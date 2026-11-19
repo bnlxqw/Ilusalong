@@ -108,6 +108,7 @@ function language_text($text) {
         'Sign in' => 'Войти',
         'Invalid email, password, or administrator access.' => 'Неверная почта или пароль либо отсутствуют права администратора.',
         'Please sign in with an administrator account.' => 'Войдите с учётной записью администратора.',
+        'Invalid or expired request token. Please reload and try again.' => 'Защитный токен недействителен или устарел. Обновите страницу и попробуйте снова.',
         'Back to website' => 'Вернуться на сайт',
         'Language' => 'Язык',
         'Admin navigation' => 'Навигация администратора',
