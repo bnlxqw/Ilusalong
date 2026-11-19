@@ -53,6 +53,8 @@ function language_text($text) {
         'Book this service' => 'Записаться на услугу',
         'Please log in to book a service.' => 'Чтобы записаться на услугу, войдите в аккаунт.',
         'Please log in to view your bookings.' => 'Чтобы посмотреть записи, войдите в аккаунт.',
+        'The booking slot is being reserved. Please try again.' => 'Это время сейчас бронируется. Попробуйте ещё раз.',
+        'This specialist is already booked at that time. Please choose another time.' => 'Этот мастер уже занят в выбранное время. Выберите другое время.',
         'Phone number' => 'Номер телефона',
         'Date and time' => 'Дата и время',
         'Book now' => 'Забронировать',

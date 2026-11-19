@@ -83,20 +83,55 @@ class Booking {
             return false;
         }
 
-        $query = "INSERT INTO bookings
-                    (user_id, session_token_hash, service_id, specialist_id, customer_name, customer_email, customer_phone, booking_date, status)
-                  VALUES
-                    (:user_id, :session_token_hash, :service_id, :specialist_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
-        return $db->executeRun($query, array(
-            ':user_id' => (int)$profile['user_id'],
-            ':session_token_hash' => self::getSessionTokenHash(),
-            ':service_id' => $serviceId,
-            ':specialist_id' => $specialistId,
-            ':customer_name' => $name,
-            ':customer_email' => $email,
-            ':customer_phone' => $phone,
-            ':booking_date' => $bookingDate->format('Y-m-d H:i:s')
-        )) > 0;
+        $bookingDateSql = $bookingDate->format('Y-m-d H:i:s');
+        $lockName = 'ilusalong_booking_' . substr(hash('sha256', $specialistId . '|' . $bookingDateSql), 0, 32);
+        $lock = $db->getOne(
+            'SELECT GET_LOCK(:lock_name, 5) AS acquired',
+            array(':lock_name' => $lockName)
+        );
+        if (!$lock || (int)$lock['acquired'] !== 1) {
+            $error = 'The booking slot is being reserved. Please try again.';
+            return false;
+        }
+
+        try {
+            $existingBooking = $db->getOne(
+                "SELECT booking_id
+                 FROM bookings
+                 WHERE specialist_id = :specialist_id
+                   AND booking_date = :booking_date
+                   AND status = 'active'
+                 LIMIT 1",
+                array(
+                    ':specialist_id' => $specialistId,
+                    ':booking_date' => $bookingDateSql
+                )
+            );
+            if ($existingBooking) {
+                $error = 'This specialist is already booked at that time. Please choose another time.';
+                return false;
+            }
+
+            $query = "INSERT INTO bookings
+                        (user_id, session_token_hash, service_id, specialist_id, customer_name, customer_email, customer_phone, booking_date, status)
+                      VALUES
+                        (:user_id, :session_token_hash, :service_id, :specialist_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
+            return $db->executeRun($query, array(
+                ':user_id' => (int)$profile['user_id'],
+                ':session_token_hash' => self::getSessionTokenHash(),
+                ':service_id' => $serviceId,
+                ':specialist_id' => $specialistId,
+                ':customer_name' => $name,
+                ':customer_email' => $email,
+                ':customer_phone' => $phone,
+                ':booking_date' => $bookingDateSql
+            )) > 0;
+        } finally {
+            $db->getOne(
+                'SELECT RELEASE_LOCK(:lock_name)',
+                array(':lock_name' => $lockName)
+            );
+        }
     }
 
     public static function getBookingsByUser() {
