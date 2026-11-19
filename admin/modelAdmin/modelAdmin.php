@@ -38,6 +38,8 @@ class modelAdmin{
         }
 
         if (!isset($_POST['btnLogin'], $_POST['email'], $_POST['password'])
+            || !is_string($_POST['email'])
+            || !is_string($_POST['password'])
             || $_POST['email'] === '' || $_POST['password'] === '') {
             return false;
         }
@@ -47,12 +49,17 @@ class modelAdmin{
             return false;
         }
 
+        if (LoginAttemptLimiter::isBlocked('admin', $email)) {
+            return false;
+        }
+
         $sql = 'SELECT user_id, username, email, password, pass, status
                 FROM users WHERE LOWER(email) = LOWER(:email) LIMIT 1';
         $db = new Database();
         $user = $db->getOne($sql, array(':email' => $email));
 
         if (!$user || $user['status'] !== 'admin') {
+            LoginAttemptLimiter::recordFailure('admin', $email);
             return false;
         }
 
@@ -70,9 +77,11 @@ class modelAdmin{
         }
 
         if (!$passwordMatches) {
+            LoginAttemptLimiter::recordFailure('admin', $email);
             return false;
         }
 
+        LoginAttemptLimiter::clearAccountFailures('admin', $email);
         if (!$passwordIsHashed
             || password_needs_rehash($user['password'], PASSWORD_DEFAULT)
             || !empty($user['pass'])) {

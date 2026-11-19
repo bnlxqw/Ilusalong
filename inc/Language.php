@@ -44,6 +44,7 @@ function language_text($text) {
         'Log out' => 'Выйти',
         'My profile' => 'Мой профиль',
         'Invalid email or password.' => 'Неверная почта или пароль.',
+        'Too many sign-in attempts. Please try again later.' => 'Слишком много попыток входа. Попробуйте позже.',
         'Don’t have an account?' => 'Нет аккаунта?',
         'Already have an account?' => 'Уже есть аккаунт?',
         'An account with this email already exists.' => 'Аккаунт с такой почтой уже существует.',

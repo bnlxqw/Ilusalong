@@ -14,6 +14,8 @@ class UserAuth {
 
     public static function login(&$error = null) {
         if (!isset($_POST['email'], $_POST['password'], $_POST['csrf_token'])
+            || !is_string($_POST['email'])
+            || !is_string($_POST['password'])
             || !isset($_SESSION['customer_csrf_token'])
             || !hash_equals($_SESSION['customer_csrf_token'], (string)$_POST['csrf_token'])) {
             $error = 'Your session expired. Please try again.';
@@ -26,6 +28,11 @@ class UserAuth {
             return false;
         }
 
+        if (LoginAttemptLimiter::isBlocked('customer', $email)) {
+            $error = 'Too many sign-in attempts. Please try again later.';
+            return false;
+        }
+
         $db = new Database();
         $user = $db->getOne(
             "SELECT user_id, username, email, password, pass
@@ -35,10 +42,12 @@ class UserAuth {
             array(':email' => $email)
         );
         if (!$user || !self::passwordMatches($_POST['password'], $user)) {
+            LoginAttemptLimiter::recordFailure('customer', $email);
             $error = 'Invalid email or password.';
             return false;
         }
 
+        LoginAttemptLimiter::clearAccountFailures('customer', $email);
         $passwordIsHashed = password_get_info($user['password'])['algo'] !== null;
         if (!$passwordIsHashed
             || password_needs_rehash($user['password'], PASSWORD_DEFAULT)
