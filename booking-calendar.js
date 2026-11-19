@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const minDate = calendar.dataset.minDate;
     const todayParts = minDate.split('-').map(Number);
     const today = new Date(todayParts[0], todayParts[1] - 1, todayParts[2]);
+    const procedureDurationMinutes = 30;
     let displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     let selectedDate = '';
 
@@ -25,6 +26,16 @@ document.addEventListener('DOMContentLoaded', function () {
       return specialistId && bookedSlots[specialistId] && bookedSlots[specialistId][dateKey]
         ? bookedSlots[specialistId][dateKey]
         : [];
+    }
+
+    function overlapsProcedure(time, bookedTimes) {
+      const parts = time.split(':').map(Number);
+      const minutes = parts[0] * 60 + parts[1];
+      return bookedTimes.some(function (bookedTime) {
+        const bookedParts = bookedTime.split(':').map(Number);
+        const bookedMinutes = bookedParts[0] * 60 + bookedParts[1];
+        return Math.abs(minutes - bookedMinutes) < procedureDurationMinutes;
+      });
     }
 
     function renderAvailableTimes() {
@@ -47,12 +58,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const option = document.createElement('option');
         option.value = time;
         option.textContent = time;
-        const isBooked = busyTimes.indexOf(time) !== -1;
         const isPast = new Date(selectedDate + 'T' + time) <= new Date();
-        option.disabled = isBooked || isPast;
-        if (isBooked) {
+        if (isPast) continue;
+        if (busyTimes.indexOf(time) !== -1) {
+          option.disabled = true;
           option.textContent += ' — ' + calendar.dataset.timeBookedLabel;
+          timeInput.appendChild(option);
+          continue;
         }
+        if (overlapsProcedure(time, busyTimes)) continue;
         timeInput.appendChild(option);
       }
     }

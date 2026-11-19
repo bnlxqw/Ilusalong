@@ -360,6 +360,7 @@ a:hover { color: var(--ink); }
 .calendar-booked-time { padding: 3px 9px; background: #ecebed; border: 1px solid #d5d3d6; border-radius: 14px; color: #68666a; font-size: 13px; font-weight: 700; }
 .booking-calendar + label { margin-top: 2px; }
 .booking-form label { margin-top: 4px; }
+.booking-form option:disabled { color: #777; }
 .bookings-table { width: 100%; max-width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .bookings-table th, .bookings-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; }
 .bookings-table th { background: var(--blush); font-weight: 600; }

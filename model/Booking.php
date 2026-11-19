@@ -1,5 +1,7 @@
 <?php
 class Booking {
+    const PROCEDURE_DURATION_MINUTES = 30;
+
     public static function getSessionTokenHash() {
         if (!isset($_SESSION['booking_owner_token'])) {
             $_SESSION['booking_owner_token'] = bin2hex(random_bytes(32));
@@ -69,6 +71,12 @@ class Booking {
             return false;
         }
 
+        $bookingTime = $bookingDate->format('H:i');
+        if ($bookingTime < '08:00' || $bookingTime > '19:00') {
+            $error = 'Choose a time between 08:00 and 19:00.';
+            return false;
+        }
+
         $db = new Database();
         $service = $db->getOne(
             'SELECT service_id FROM services WHERE service_id = :service_id',
@@ -84,7 +92,11 @@ class Booking {
         }
 
         $bookingDateSql = $bookingDate->format('Y-m-d H:i:s');
-        $lockName = 'ilusalong_booking_' . substr(hash('sha256', $specialistId . '|' . $bookingDateSql), 0, 32);
+        $lockName = 'ilusalong_booking_' . substr(
+            hash('sha256', $specialistId . '|' . $bookingDate->format('Y-m-d')),
+            0,
+            32
+        );
         $lock = $db->getOne(
             'SELECT GET_LOCK(:lock_name, 5) AS acquired',
             array(':lock_name' => $lockName)
@@ -95,20 +107,22 @@ class Booking {
         }
 
         try {
-            $existingBooking = $db->getOne(
+            $nearbyBooking = $db->getOne(
                 "SELECT booking_id
                  FROM bookings
                  WHERE specialist_id = :specialist_id
-                   AND booking_date = :booking_date
+                   AND booking_date > DATE_SUB(:window_start, INTERVAL " . self::PROCEDURE_DURATION_MINUTES . " MINUTE)
+                   AND booking_date < DATE_ADD(:window_end, INTERVAL " . self::PROCEDURE_DURATION_MINUTES . " MINUTE)
                    AND status = 'active'
                  LIMIT 1",
                 array(
                     ':specialist_id' => $specialistId,
-                    ':booking_date' => $bookingDateSql
+                    ':window_start' => $bookingDateSql,
+                    ':window_end' => $bookingDateSql
                 )
             );
-            if ($existingBooking) {
-                $error = 'This specialist is already booked at that time. Please choose another time.';
+            if ($nearbyBooking) {
+                $error = 'This specialist has another booking within 30 minutes. Please choose another time.';
                 return false;
             }
 
