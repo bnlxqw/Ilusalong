@@ -3,7 +3,6 @@ class ViewBookings {
     public static function BookingForm($serviceId, $specialists, $bookedSlots) {
         echo '<section class="booking-section" id="booking"><h2>' . language_text('Book this service') . '</h2>';
         self::FlashMessage();
-        self::UpcomingAvailability($specialists, $bookedSlots);
         $profile = UserAuth::getProfile();
         if (!$profile) {
             echo '<p class="notice">' . language_text('Please log in to book a service.') .
@@ -27,7 +26,9 @@ class ViewBookings {
                 htmlspecialchars($specialist['name'] . ' — ' . $specialist['specialty'], ENT_QUOTES, 'UTF-8') .
                 '</option>';
         }
-        echo '</select>
+        echo '</select>';
+        self::UpcomingAvailability($specialists, $bookedSlots);
+        echo '
             <label for="booking-name">' . language_text('Name') . '</label>
             <input id="booking-name" name="customer_name" type="text" maxlength="100" autocomplete="name" required>
             <label for="booking-email">' . language_text('Email address') . '</label>
