@@ -1,6 +1,6 @@
 <?php
 class ViewBookings {
-    public static function BookingForm($serviceId, $specialists, $bookedSlots) {
+    public static function BookingForm($serviceId, $specialists, $bookedSlots, $selectedSpecialistId = 0) {
         echo '<section class="booking-section" id="booking"><h2>' . language_text('Book this service') . '</h2>';
         self::FlashMessage();
         $profile = UserAuth::getProfile();
@@ -22,7 +22,9 @@ class ViewBookings {
             <select id="booking-specialist" name="specialist_id" required>
                 <option value="">' . language_text('Select a specialist') . '</option>';
         foreach ($specialists as $specialist) {
-            echo '<option value="' . (int)$specialist['specialist_id'] . '">' .
+            $specialistId = (int)$specialist['specialist_id'];
+            echo '<option value="' . $specialistId . '"' .
+                ($specialistId === (int)$selectedSpecialistId ? ' selected' : '') . '>' .
                 htmlspecialchars($specialist['name'] . ' — ' . $specialist['specialty'], ENT_QUOTES, 'UTF-8') .
                 '</option>';
         }

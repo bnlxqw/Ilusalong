@@ -258,6 +258,11 @@ a:hover { color: var(--ink); }
   font: 500 26px/1 Georgia, serif;
 }
 .specialist-card-content { min-width: 0; }
+.specialist-card-content > h3 { margin: 18px 0 8px; font-size: 16px; font-weight: 600; }
+.specialist-service-list { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.specialist-service-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 7px; border-top: 1px solid var(--line); }
+.specialist-service-list a { min-width: 0; overflow-wrap: anywhere; }
+.specialist-service-list span { flex: 0 0 auto; color: var(--rose-dark); font-weight: 600; }
 .specialist-card h2 { margin: 0 0 8px; font-size: 23px; font-weight: 500; }
 .specialist-card p:not(.specialist-specialty) { margin: 0 0 16px; color: var(--muted); }
 .specialist-specialty { margin: 0 0 4px; color: var(--rose-dark); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }

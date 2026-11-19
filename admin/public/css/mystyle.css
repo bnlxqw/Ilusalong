@@ -113,6 +113,16 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 .admin-empty { padding: 18px; color: var(--admin-muted); background: #fffdfc; border-radius: 10px; }
 .specialist-admin-form { display: grid; max-width: 620px; gap: 10px; margin-bottom: 30px; }
 .specialist-admin-form label { margin-top: 4px; }
+.specialist-service-options { display: flex; flex-direction: column; gap: 6px; width: 100%; min-width: 0; margin: 0; padding: 10px; border: 1px solid var(--admin-line); border-radius: 8px; }
+.specialist-service-options legend { width: auto; margin: 0; padding: 0 5px; font-size: 13px; font-weight: 600; }
+.specialist-service-option { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: start; gap: 8px; width: 100%; min-width: 0; margin: 0 !important; font-weight: 400; }
+.specialist-service-option input[type="checkbox"] { margin: 5px 0 0; }
+.specialist-service-option span { display: block; min-width: 0; overflow-wrap: break-word; word-break: normal; }
+.specialist-admin-table th:nth-child(1) { width: 15%; }
+.specialist-admin-table th:nth-child(2) { width: 15%; }
+.specialist-admin-table th:nth-child(3) { width: 21%; }
+.specialist-admin-table th:nth-child(4) { width: 34%; }
+.specialist-admin-table th:nth-child(5) { width: 15%; }
 .specialist-edit-form { margin: 0; }
 .specialist-delete-form { display: inline-block; margin: 0 0 0 6px; }
 .specialist-admin-form textarea,

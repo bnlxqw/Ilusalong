@@ -15,7 +15,24 @@
                         <?php if ($specialist['bio'] !== '') { ?>
                             <p><?php echo nl2br(htmlspecialchars($specialist['bio'], ENT_QUOTES, 'UTF-8')); ?></p>
                         <?php } ?>
-                        <a class="button-link" href="services"><?php echo language_text('Choose a service'); ?></a>
+                        <?php $specialistServices = isset($servicesBySpecialist[(int)$specialist['specialist_id']])
+                            ? $servicesBySpecialist[(int)$specialist['specialist_id']]
+                            : array(); ?>
+                        <?php if ($specialistServices) { ?>
+                            <h3><?php echo language_text('Services provided'); ?></h3>
+                            <ul class="specialist-service-list">
+                                <?php foreach ($specialistServices as $service) { ?>
+                                    <li>
+                                        <a href="service?service_id=<?php echo (int)$service['service_id']; ?>&amp;specialist_id=<?php echo (int)$specialist['specialist_id']; ?>#booking">
+                                            <?php echo htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8'); ?>
+                                        </a>
+                                        <span><?php echo htmlspecialchars((string)$service['price'], ENT_QUOTES, 'UTF-8'); ?> €</span>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        <?php } else { ?>
+                            <p class="muted"><?php echo language_text('No services assigned to this specialist.'); ?></p>
+                        <?php } ?>
                     </div>
                 </article>
             <?php } ?>

@@ -69,6 +69,8 @@ class ControllerAdmin {
 
     public static function specialistsList() {
         $arr = modelAdminSpecialists::getSpecialistList();
+        $services = modelAdminSpecialists::getServiceOptions();
+        $serviceAssignments = modelAdminSpecialists::getSpecialistServiceAssignments();
         include_once 'viewAdmin/specialistsList.php';
     }
 
@@ -76,6 +78,8 @@ class ControllerAdmin {
         $error = null;
         $saved = modelAdminSpecialists::addSpecialist($error);
         $arr = modelAdminSpecialists::getSpecialistList();
+        $services = modelAdminSpecialists::getServiceOptions();
+        $serviceAssignments = modelAdminSpecialists::getSpecialistServiceAssignments();
         include_once 'viewAdmin/specialistsList.php';
     }
 
@@ -83,6 +87,8 @@ class ControllerAdmin {
         $error = null;
         $saved = modelAdminSpecialists::editSpecialist($error);
         $arr = modelAdminSpecialists::getSpecialistList();
+        $services = modelAdminSpecialists::getServiceOptions();
+        $serviceAssignments = modelAdminSpecialists::getSpecialistServiceAssignments();
         include_once 'viewAdmin/specialistsList.php';
     }
 
@@ -90,6 +96,8 @@ class ControllerAdmin {
         $error = null;
         $deleted = modelAdminSpecialists::deleteSpecialist($error);
         $arr = modelAdminSpecialists::getSpecialistList();
+        $services = modelAdminSpecialists::getServiceOptions();
+        $serviceAssignments = modelAdminSpecialists::getSpecialistServiceAssignments();
         include_once 'viewAdmin/specialistsList.php';
     }
 

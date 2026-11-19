@@ -86,8 +86,8 @@ class Booking {
             $error = 'The selected service is not available.';
             return false;
         }
-        if (!Specialist::getSpecialistById($specialistId)) {
-            $error = 'The selected specialist is not available.';
+        if (!Specialist::offersService($specialistId, $serviceId)) {
+            $error = 'The selected specialist cannot provide this service.';
             return false;
         }
 

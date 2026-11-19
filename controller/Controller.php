@@ -28,13 +28,25 @@ class Controller {
             self::error404();
             return;
         }
-        $specialists = Specialist::getAllActive();
+        $specialists = Specialist::getActiveForService($service['service_id']);
+        $requestedSpecialistId = isset($_GET['specialist_id'])
+            ? filter_var($_GET['specialist_id'], FILTER_VALIDATE_INT)
+            : false;
+        $selectedSpecialistId = 0;
+        foreach ($specialists as $specialist) {
+            if ($requestedSpecialistId !== false
+                && (int)$specialist['specialist_id'] === (int)$requestedSpecialistId) {
+                $selectedSpecialistId = (int)$specialist['specialist_id'];
+                break;
+            }
+        }
         $bookedSlots = Booking::getUpcomingBookedSlots($specialists);
         include_once 'view/service-detail.php';
     }
 
     public static function AllSpecialists() {
         $arr = Specialist::getAllActive();
+        $servicesBySpecialist = Specialist::getServicesForSpecialists($arr);
         ob_start();
         include 'view/specialists.php';
         $content = ob_get_clean();

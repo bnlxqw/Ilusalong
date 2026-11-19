@@ -4,7 +4,7 @@
         <title><?php echo htmlspecialchars(language_text('Ilusalong — Beauty Salon'), ENT_QUOTES, 'UTF-8'); ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="<?php echo htmlspecialchars(language_text('Beauty services and care at Ilusalong'), ENT_QUOTES, 'UTF-8'); ?>">
-        <link rel="stylesheet" type="text/css" href="style.css?v=9">
+        <link rel="stylesheet" type="text/css" href="style.css?v=10">
         <meta charset="utf-8">
     
     </head>

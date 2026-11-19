@@ -70,5 +70,25 @@ class database {
         $stmt->execute($params);
         return $stmt->rowCount();
     }
+
+    function beginTransaction() {
+        return $this->conn->beginTransaction();
+    }
+
+    function commit() {
+        return $this->conn->commit();
+    }
+
+    function rollBack() {
+        return $this->conn->rollBack();
+    }
+
+    function inTransaction() {
+        return $this->conn->inTransaction();
+    }
+
+    function lastInsertId() {
+        return $this->conn->lastInsertId();
+    }
 }
 ?>

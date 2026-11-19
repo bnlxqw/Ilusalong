@@ -22,6 +22,15 @@
         <input id="specialist-specialty" class="form-control" type="text" name="specialty" maxlength="120" required>
         <label for="specialist-bio"><?php echo language_text('Biography'); ?></label>
         <textarea id="specialist-bio" class="form-control" name="bio" maxlength="2000" rows="4"></textarea>
+        <fieldset class="specialist-service-options">
+            <legend><?php echo language_text('Services provided'); ?></legend>
+            <?php foreach ($services as $service) { ?>
+                <label class="specialist-service-option">
+                    <input type="checkbox" name="service_ids[]" value="<?php echo (int)$service['service_id']; ?>">
+                    <span><?php echo htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8'); ?></span>
+                </label>
+            <?php } ?>
+        </fieldset>
         <button class="btn btn-primary" type="submit" name="addSpecialist"><?php echo language_text('Add specialist'); ?></button>
     </form>
 
@@ -29,15 +38,19 @@
         <p class="admin-empty"><?php echo language_text('No specialists have been added yet.'); ?></p>
     <?php } else { ?>
         <div class="table-responsive">
-            <table class="table table-bordered admin-table">
+            <table class="table table-bordered admin-table specialist-admin-table">
                 <thead><tr>
                     <th><?php echo language_text('Name'); ?></th>
                     <th><?php echo language_text('Specialty'); ?></th>
                     <th><?php echo language_text('Biography'); ?></th>
+                    <th><?php echo language_text('Services provided'); ?></th>
                     <th><?php echo language_text('Actions'); ?></th>
                 </tr></thead>
                 <tbody>
                     <?php foreach ($arr as $specialist) { ?>
+                        <?php $assignedServiceIds = isset($serviceAssignments[(int)$specialist['specialist_id']])
+                            ? $serviceAssignments[(int)$specialist['specialist_id']]
+                            : array(); ?>
                         <tr>
                             <td data-label="<?php echo htmlspecialchars(language_text('Name'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <form id="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" method="POST" action="specialistEditResult" class="specialist-edit-form">
@@ -51,6 +64,17 @@
                             </td>
                             <td data-label="<?php echo htmlspecialchars(language_text('Biography'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <textarea form="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" class="form-control" name="bio" maxlength="2000" rows="3" aria-label="<?php echo htmlspecialchars(language_text('Biography'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($specialist['bio'], ENT_QUOTES, 'UTF-8'); ?></textarea>
+                            </td>
+                            <td data-label="<?php echo htmlspecialchars(language_text('Services provided'), ENT_QUOTES, 'UTF-8'); ?>">
+                                <fieldset class="specialist-service-options">
+                                    <legend class="sr-only"><?php echo language_text('Services provided'); ?></legend>
+                                    <?php foreach ($services as $service) { ?>
+                                        <label class="specialist-service-option">
+                                            <input form="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" type="checkbox" name="service_ids[]" value="<?php echo (int)$service['service_id']; ?>"<?php echo in_array((int)$service['service_id'], $assignedServiceIds, true) ? ' checked' : ''; ?>>
+                                            <span><?php echo htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </label>
+                                    <?php } ?>
+                                </fieldset>
                             </td>
                             <td data-label="<?php echo htmlspecialchars(language_text('Actions'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <button form="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" class="btn btn-primary specialist-save-button" type="submit" name="saveSpecialist" aria-label="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>"><span class="action-label"><?php echo language_text('Save changes'); ?></span><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>

@@ -9,6 +9,25 @@ class modelAdminSpecialists {
         );
     }
 
+    public static function getServiceOptions() {
+        $db = new Database();
+        return $db->getAll(
+            'SELECT service_id, title FROM services ORDER BY title ASC'
+        );
+    }
+
+    public static function getSpecialistServiceAssignments() {
+        $db = new Database();
+        $rows = $db->getAll(
+            'SELECT specialist_id, service_id FROM specialist_services'
+        );
+        $assignments = array();
+        foreach ($rows as $row) {
+            $assignments[(int)$row['specialist_id']][] = (int)$row['service_id'];
+        }
+        return $assignments;
+    }
+
     public static function addSpecialist(&$error = null) {
         if (!isset($_POST['addSpecialist'], $_POST['name'], $_POST['specialty'], $_POST['bio'])) {
             return false;
@@ -19,12 +38,39 @@ class modelAdminSpecialists {
             return false;
         }
 
+        $serviceIds = $data['service_ids'];
+        unset($data['service_ids']);
         $db = new Database();
-        return $db->executeRun(
-            'INSERT INTO specialists (name, specialty, bio, is_active)
-             VALUES (:name, :specialty, :bio, 1)',
-            $data
-        ) > 0;
+        if (!$db->beginTransaction()) {
+            $error = 'Unable to save specialist.';
+            return false;
+        }
+
+        try {
+            if ($db->executeRun(
+                'INSERT INTO specialists (name, specialty, bio, is_active)
+                 VALUES (:name, :specialty, :bio, 1)',
+                $data
+            ) < 1) {
+                $error = 'Unable to save specialist.';
+                return false;
+            }
+
+            $specialistId = (int)$db->lastInsertId();
+            if ($specialistId < 1 || !self::replaceServiceAssignments($db, $specialistId, $serviceIds)) {
+                $error = 'Unable to save specialist.';
+                return false;
+            }
+            if (!$db->commit()) {
+                $error = 'Unable to save specialist.';
+                return false;
+            }
+            return true;
+        } finally {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+        }
     }
 
     public static function editSpecialist(&$error = null) {
@@ -52,19 +98,36 @@ class modelAdminSpecialists {
             $error = 'Specialist not found.';
             return false;
         }
-        if ($existing['name'] === $data[':name']
-            && $existing['specialty'] === $data[':specialty']
-            && $existing['bio'] === $data[':bio']) {
-            return true;
+
+        $serviceIds = $data['service_ids'];
+        unset($data['service_ids']);
+        $data[':specialist_id'] = $specialistId;
+        if (!$db->beginTransaction()) {
+            $error = 'Unable to save specialist.';
+            return false;
         }
 
-        $data[':specialist_id'] = $specialistId;
-        return $db->executeRun(
-            'UPDATE specialists
-             SET name = :name, specialty = :specialty, bio = :bio
-             WHERE specialist_id = :specialist_id',
-            $data
-        ) > 0;
+        try {
+            $db->executeRun(
+                'UPDATE specialists
+                 SET name = :name, specialty = :specialty, bio = :bio
+                 WHERE specialist_id = :specialist_id',
+                $data
+            );
+            if (!self::replaceServiceAssignments($db, $specialistId, $serviceIds)) {
+                $error = 'Unable to save specialist.';
+                return false;
+            }
+            if (!$db->commit()) {
+                $error = 'Unable to save specialist.';
+                return false;
+            }
+            return true;
+        } finally {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+        }
     }
 
     public static function deleteSpecialist(&$error = null) {
@@ -103,7 +166,70 @@ class modelAdminSpecialists {
             return false;
         }
 
-        return array(':name' => $name, ':specialty' => $specialty, ':bio' => $bio);
+        $serviceIds = isset($_POST['service_ids']) && is_array($_POST['service_ids'])
+            ? $_POST['service_ids']
+            : array();
+        $uniqueServiceIds = array();
+        foreach ($serviceIds as $serviceId) {
+            if (!is_scalar($serviceId)) {
+                $error = 'Select valid services.';
+                return false;
+            }
+            $serviceId = filter_var($serviceId, FILTER_VALIDATE_INT);
+            if ($serviceId === false || $serviceId < 1) {
+                $error = 'Select valid services.';
+                return false;
+            }
+            $uniqueServiceIds[(int)$serviceId] = (int)$serviceId;
+        }
+        if (!$uniqueServiceIds) {
+            $error = 'Select at least one service.';
+            return false;
+        }
+
+        $placeholders = array();
+        $params = array();
+        foreach (array_values($uniqueServiceIds) as $index => $serviceId) {
+            $placeholder = ':service_' . $index;
+            $placeholders[] = $placeholder;
+            $params[$placeholder] = $serviceId;
+        }
+        $db = new Database();
+        $validServices = $db->getAll(
+            'SELECT service_id FROM services WHERE service_id IN (' . implode(', ', $placeholders) . ')',
+            $params
+        );
+        if (count($validServices) !== count($uniqueServiceIds)) {
+            $error = 'Select valid services.';
+            return false;
+        }
+
+        return array(
+            ':name' => $name,
+            ':specialty' => $specialty,
+            ':bio' => $bio,
+            'service_ids' => array_values($uniqueServiceIds)
+        );
+    }
+
+    private static function replaceServiceAssignments($db, $specialistId, $serviceIds) {
+        $db->executeRun(
+            'DELETE FROM specialist_services WHERE specialist_id = :specialist_id',
+            array(':specialist_id' => $specialistId)
+        );
+        foreach ($serviceIds as $serviceId) {
+            if ($db->executeRun(
+                'INSERT INTO specialist_services (specialist_id, service_id)
+                 VALUES (:specialist_id, :service_id)',
+                array(
+                    ':specialist_id' => $specialistId,
+                    ':service_id' => $serviceId
+                )
+            ) < 1) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ?>
