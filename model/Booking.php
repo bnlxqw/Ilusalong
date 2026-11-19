@@ -1,6 +1,7 @@
 <?php
 class Booking {
-    const PROCEDURE_DURATION_MINUTES = 30;
+    const SLOT_INTERVAL_MINUTES = 30;
+    const MAX_PROCEDURE_DURATION_MINUTES = 660;
 
     public static function getSessionTokenHash() {
         if (!isset($_SESSION['booking_owner_token'])) {
@@ -79,11 +80,24 @@ class Booking {
 
         $db = new Database();
         $service = $db->getOne(
-            'SELECT service_id FROM services WHERE service_id = :service_id',
+            'SELECT service_id, duration_minutes FROM services WHERE service_id = :service_id',
             array(':service_id' => $serviceId)
         );
         if (!$service) {
             $error = 'The selected service is not available.';
+            return false;
+        }
+        $serviceDuration = (int)$service['duration_minutes'];
+        if ($serviceDuration < 1 || $serviceDuration > self::MAX_PROCEDURE_DURATION_MINUTES) {
+            $error = 'The selected service is not available.';
+            return false;
+        }
+        $slotInterval = self::getSlotInterval($serviceDuration);
+        $minutesFromOpening = ((int)$bookingDate->format('H') * 60) + (int)$bookingDate->format('i') - (8 * 60);
+        if ($minutesFromOpening < 0
+            || $minutesFromOpening % $slotInterval !== 0
+            || ((int)$bookingDate->format('H') * 60) + (int)$bookingDate->format('i') + $slotInterval > 19 * 60) {
+            $error = 'Choose one of the available time slots.';
             return false;
         }
         if (!Specialist::offersService($specialistId, $serviceId)) {
@@ -107,33 +121,42 @@ class Booking {
         }
 
         try {
-            $nearbyBooking = $db->getOne(
-                "SELECT booking_id
+            $dayStart = $bookingDate->setTime(0, 0)->format('Y-m-d H:i:s');
+            $dayEnd = $bookingDate->setTime(0, 0)->modify('+1 day')->format('Y-m-d H:i:s');
+            $nearbyBookings = $db->getAll(
+                "SELECT bookings.booking_date, bookings.duration_minutes
                  FROM bookings
-                 WHERE specialist_id = :specialist_id
-                   AND booking_date > DATE_SUB(:window_start, INTERVAL " . self::PROCEDURE_DURATION_MINUTES . " MINUTE)
-                   AND booking_date < DATE_ADD(:window_end, INTERVAL " . self::PROCEDURE_DURATION_MINUTES . " MINUTE)
-                   AND status = 'active'
-                 LIMIT 1",
+                 WHERE bookings.specialist_id = :specialist_id
+                   AND bookings.booking_date >= :day_start
+                   AND bookings.booking_date < :day_end
+                   AND bookings.status = 'active'",
                 array(
                     ':specialist_id' => $specialistId,
-                    ':window_start' => $bookingDateSql,
-                    ':window_end' => $bookingDateSql
+                    ':day_start' => $dayStart,
+                    ':day_end' => $dayEnd
                 )
             );
-            if ($nearbyBooking) {
-                $error = 'This specialist has another booking within 30 minutes. Please choose another time.';
-                return false;
+            $requestedStart = $bookingDate->getTimestamp();
+            $requestedEnd = $requestedStart + ($slotInterval * 60);
+            foreach ($nearbyBookings as $nearbyBooking) {
+                $busyStart = strtotime($nearbyBooking['booking_date']);
+                $busyInterval = self::getSlotInterval((int)$nearbyBooking['duration_minutes']);
+                $busyEnd = $busyStart + ($busyInterval * 60);
+                if ($requestedStart < $busyEnd && $busyStart < $requestedEnd) {
+                    $error = 'This specialist already has a booking during that time. Please choose another time.';
+                    return false;
+                }
             }
 
             $query = "INSERT INTO bookings
-                        (user_id, session_token_hash, service_id, specialist_id, customer_name, customer_email, customer_phone, booking_date, status)
+                        (user_id, session_token_hash, service_id, duration_minutes, specialist_id, customer_name, customer_email, customer_phone, booking_date, status)
                       VALUES
-                        (:user_id, :session_token_hash, :service_id, :specialist_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
+                        (:user_id, :session_token_hash, :service_id, :duration_minutes, :specialist_id, :customer_name, :customer_email, :customer_phone, :booking_date, 'active')";
             return $db->executeRun($query, array(
                 ':user_id' => (int)$profile['user_id'],
                 ':session_token_hash' => self::getSessionTokenHash(),
                 ':service_id' => $serviceId,
+                ':duration_minutes' => $serviceDuration,
                 ':specialist_id' => $specialistId,
                 ':customer_name' => $name,
                 ':customer_email' => $email,
@@ -186,14 +209,19 @@ class Booking {
 
         $db = new Database();
         return $db->getAll(
-            "SELECT specialist_id, booking_date
+            "SELECT bookings.specialist_id, bookings.booking_date, bookings.duration_minutes
              FROM bookings
-             WHERE specialist_id IN (" . implode(', ', $placeholders) . ")
-               AND status = 'active'
-               AND booking_date > NOW()
-             ORDER BY specialist_id ASC, booking_date ASC",
+             WHERE bookings.specialist_id IN (" . implode(', ', $placeholders) . ")
+               AND bookings.status = 'active'
+               AND bookings.booking_date > NOW()
+             ORDER BY bookings.specialist_id ASC, bookings.booking_date ASC",
             $params
         );
+    }
+
+    public static function getSlotInterval($durationMinutes) {
+        $durationMinutes = max(1, (int)$durationMinutes);
+        return (int)(ceil($durationMinutes / self::SLOT_INTERVAL_MINUTES) * self::SLOT_INTERVAL_MINUTES);
     }
 
     public static function cancelBooking($bookingId, &$error = null) {

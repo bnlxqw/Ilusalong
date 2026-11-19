@@ -26,7 +26,7 @@
                                         <a href="service?service_id=<?php echo (int)$service['service_id']; ?>&amp;specialist_id=<?php echo (int)$specialist['specialist_id']; ?>#booking">
                                             <?php echo htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8'); ?>
                                         </a>
-                                        <span><?php echo htmlspecialchars((string)$service['price'], ENT_QUOTES, 'UTF-8'); ?> €</span>
+                                        <span><?php echo htmlspecialchars((string)$service['price'], ENT_QUOTES, 'UTF-8'); ?> € · <?php echo (int)$service['duration_minutes']; ?> <?php echo language_text('min'); ?></span>
                                     </li>
                                 <?php } ?>
                             </ul>

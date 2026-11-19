@@ -25,7 +25,8 @@ class ViewServices{
         echo '<p>' . htmlspecialchars(localized_service_description($service), ENT_QUOTES, 'UTF-8') . '</p>';
         echo '<div class="service-card-footer"><strong class="service-price">' .
             htmlspecialchars((string)$service['price'], ENT_QUOTES, 'UTF-8') .
-            ' €</strong><a class="button-link" href="service?service_id=' .
+            ' €</strong><span class="service-duration">' . (int)$service['duration_minutes'] . ' ' .
+            language_text('min') . '</span><a class="button-link" href="service?service_id=' .
             (int)$service['service_id'] . '">' . language_text('View details') . '</a></div>';
         Controller::ReviewsCount($service['service_id']);
         echo '</div></article>';
@@ -42,6 +43,8 @@ class ViewServices{
             htmlspecialchars(localized_service_title($service), ENT_QUOTES, 'UTF-8') . '</h1>';
         echo '<p>' . htmlspecialchars(localized_service_description($service), ENT_QUOTES, 'UTF-8') . '</p>';
         echo '<p class="service-price">' . htmlspecialchars((string)$service['price'], ENT_QUOTES, 'UTF-8') . ' €</p>';
+        echo '<p class="service-duration">' . language_text('Duration:') . ' ' .
+            (int)$service['duration_minutes'] . ' ' . language_text('min') . '</p>';
         echo '</div></article>';
     }
 }

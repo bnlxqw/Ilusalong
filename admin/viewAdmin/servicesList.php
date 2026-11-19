@@ -25,6 +25,7 @@
                     echo '<b>'.language_text('Description').':</b> '.htmlspecialchars(localized_service_description($row), ENT_QUOTES, 'UTF-8').'<br>';
                     echo '<b>'.language_text('Category:').'</b> <i>'.htmlspecialchars(localized_category_name($row), ENT_QUOTES, 'UTF-8').'</i>';
                     echo '<br><b>'.language_text('Price:').'</b> <i>'.htmlspecialchars((string)$row['price'], ENT_QUOTES, 'UTF-8').' €</i>';
+                    echo '<br><b>'.language_text('Duration:').'</b> <i>'.(int)$row['duration_minutes'].' '.language_text('min').'</i>';
                     echo '</td>';
                     echo '<td data-label="'.htmlspecialchars(language_text('Actions'), ENT_QUOTES, 'UTF-8').'">';
                     echo '<a href="serviceEdit?service_id='.(int)$row['service_id'].'" aria-label="'.htmlspecialchars(language_text('Edit'), ENT_QUOTES, 'UTF-8').'" title="'.htmlspecialchars(language_text('Edit'), ENT_QUOTES, 'UTF-8').'"><span class="action-label">'.language_text('Edit').' </span><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>';

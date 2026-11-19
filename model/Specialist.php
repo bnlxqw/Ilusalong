@@ -39,7 +39,8 @@ class Specialist {
 
         $db = new Database();
         $rows = $db->getAll(
-            'SELECT specialist_services.specialist_id, services.service_id, services.title, services.price
+            'SELECT specialist_services.specialist_id, services.service_id, services.title, services.price,
+                    services.duration_minutes
              FROM specialist_services
              INNER JOIN services ON services.service_id = specialist_services.service_id
              WHERE specialist_services.specialist_id IN (' . implode(', ', $placeholders) . ')

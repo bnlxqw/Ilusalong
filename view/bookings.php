@@ -1,6 +1,6 @@
 <?php
 class ViewBookings {
-    public static function BookingForm($serviceId, $specialists, $bookedSlots, $selectedSpecialistId = 0) {
+    public static function BookingForm($serviceId, $serviceDuration, $specialists, $bookedSlots, $selectedSpecialistId = 0) {
         echo '<section class="booking-section" id="booking"><h2>' . language_text('Book this service') . '</h2>';
         self::FlashMessage();
         $profile = UserAuth::getProfile();
@@ -29,7 +29,7 @@ class ViewBookings {
                 '</option>';
         }
         echo '</select>';
-        self::BookingCalendar($bookedSlots);
+        self::BookingCalendar($bookedSlots, $serviceDuration);
         echo '
             <label for="booking-time">' . language_text('Choose a time') . '</label>
             <select id="booking-time" required disabled>
@@ -43,10 +43,10 @@ class ViewBookings {
             <label for="booking-phone">' . language_text('Phone number') . '</label>
             <input id="booking-phone" name="customer_phone" type="tel" maxlength="32" autocomplete="tel" required>
             <button type="submit" name="createBooking">' . language_text('Book now') . '</button>
-        </form><script defer src="booking-calendar.js?v=8"></script></section>';
+        </form><script defer src="booking-calendar.js?v=9"></script></section>';
     }
 
-    private static function BookingCalendar($bookedSlots) {
+    private static function BookingCalendar($bookedSlots, $serviceDuration) {
         $slotsBySpecialist = array();
         foreach ($bookedSlots as $slot) {
             $specialistId = (int)$slot['specialist_id'];
@@ -54,7 +54,10 @@ class ViewBookings {
             if (!isset($slotsBySpecialist[$specialistId][$date])) {
                 $slotsBySpecialist[$specialistId][$date] = array();
             }
-            $slotsBySpecialist[$specialistId][$date][] = date('H:i', strtotime($slot['booking_date']));
+            $slotsBySpecialist[$specialistId][$date][] = array(
+                'time' => date('H:i', strtotime($slot['booking_date'])),
+                'durationMinutes' => Booking::getSlotInterval((int)$slot['duration_minutes'])
+            );
         }
 
         $availabilityJson = json_encode(
@@ -63,6 +66,7 @@ class ViewBookings {
         );
         echo '<div class="booking-calendar" data-booked-slots="' .
             htmlspecialchars($availabilityJson, ENT_QUOTES, 'UTF-8') .
+            '" data-service-duration="' . (int)$serviceDuration .
             '" data-min-date="' . htmlspecialchars(date('Y-m-d'), ENT_QUOTES, 'UTF-8') .
             '" data-locale="' . htmlspecialchars(current_language(), ENT_QUOTES, 'UTF-8') .
             '" data-choose-specialist="' . htmlspecialchars(language_text('Choose a specialist and a date to see booked times.'), ENT_QUOTES, 'UTF-8') .

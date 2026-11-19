@@ -62,6 +62,10 @@ else{
             <td><?php echo language_text('Price (€)'); ?></td>
             <td><input type="number" name="price" class="form-control" min="0" step="0.01" required value="<?php echo htmlspecialchars((string)$detail['price'], ENT_QUOTES, 'UTF-8'); ?>"></td>
         </tr>
+        <tr>
+            <td><?php echo language_text('Duration (minutes)'); ?></td>
+            <td><input type="number" name="duration_minutes" class="form-control" min="1" max="660" step="1" required value="<?php echo htmlspecialchars((string)$detail['duration_minutes'], ENT_QUOTES, 'UTF-8'); ?>"></td>
+        </tr>
         <!-- image-->
         <tr>
             <td><?php echo language_text('Current image'); ?></td>

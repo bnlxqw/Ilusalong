@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const minDate = calendar.dataset.minDate;
     const todayParts = minDate.split('-').map(Number);
     const today = new Date(todayParts[0], todayParts[1] - 1, todayParts[2]);
-    const procedureDurationMinutes = 30;
+    const serviceDurationMinutes = Number(calendar.dataset.serviceDuration);
+    const serviceIntervalMinutes = Math.ceil(serviceDurationMinutes / 30) * 30;
     let displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     let selectedDate = '';
 
@@ -30,11 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function overlapsProcedure(time, bookedTimes) {
       const parts = time.split(':').map(Number);
-      const minutes = parts[0] * 60 + parts[1];
-      return bookedTimes.some(function (bookedTime) {
-        const bookedParts = bookedTime.split(':').map(Number);
-        const bookedMinutes = bookedParts[0] * 60 + bookedParts[1];
-        return Math.abs(minutes - bookedMinutes) < procedureDurationMinutes;
+      const start = parts[0] * 60 + parts[1];
+      const end = start + serviceIntervalMinutes;
+      return bookedTimes.some(function (booking) {
+        const bookedParts = booking.time.split(':').map(Number);
+        const bookedStart = bookedParts[0] * 60 + bookedParts[1];
+        const bookedEnd = bookedStart + booking.durationMinutes;
+        return start < bookedEnd && bookedStart < end;
       });
     }
 
@@ -52,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!canChooseTime) return;
 
       const busyTimes = bookedTimesFor(selectedDate);
-      for (let minute = 8 * 60; minute <= 19 * 60; minute += 1) {
+      for (let minute = 8 * 60; minute + serviceIntervalMinutes <= 19 * 60; minute += serviceIntervalMinutes) {
         const time = String(Math.floor(minute / 60)).padStart(2, '0') + ':' +
           String(minute % 60).padStart(2, '0');
         const option = document.createElement('option');
@@ -60,7 +63,10 @@ document.addEventListener('DOMContentLoaded', function () {
         option.textContent = time;
         const isPast = new Date(selectedDate + 'T' + time) <= new Date();
         if (isPast) continue;
-        if (busyTimes.indexOf(time) !== -1) {
+        const matchingBooking = busyTimes.find(function (booking) {
+          return booking.time === time;
+        });
+        if (matchingBooking) {
           option.disabled = true;
           option.textContent += ' — ' + calendar.dataset.timeBookedLabel;
           timeInput.appendChild(option);
@@ -98,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const chip = document.createElement('span');
           chip.className = 'calendar-booked-time';
           chip.setAttribute('aria-disabled', 'true');
-          chip.textContent = time;
+          chip.textContent = time.time;
           bookedTimesContainer.appendChild(chip);
         });
       }
@@ -137,7 +143,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (busyTimes.length > 0) {
           button.classList.add('has-bookings');
-          button.title = busyTimes.length + ' ' + calendar.dataset.bookedLabel + ' ' + busyTimes.join(', ');
+          button.title = busyTimes.length + ' ' + calendar.dataset.bookedLabel + ' ' +
+            busyTimes.map(function (booking) { return booking.time; }).join(', ');
           const marker = document.createElement('span');
           marker.className = 'calendar-day-marker';
           marker.setAttribute('aria-hidden', 'true');
@@ -162,7 +169,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const busyTimes = bookedTimesFor(selectedDate);
       const hasSelection = selectedDate && timeInput.value;
       dateInput.value = hasSelection ? selectedDate + 'T' + timeInput.value : '';
-      const isBooked = hasSelection && busyTimes.indexOf(timeInput.value) !== -1;
+      const isBooked = hasSelection && busyTimes.some(function (booking) {
+        return booking.time === timeInput.value;
+      });
       if (isBooked) {
         timeInput.value = '';
         dateInput.value = '';
