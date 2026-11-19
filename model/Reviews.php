@@ -9,21 +9,27 @@ class Reviews {
     }
 
     public static function insertReview($text, $serviceId, &$error = null) {
-        // CSRF check
         if (!isset($_POST['csrf_token'], $_SESSION['review_csrf_token'])
             || !hash_equals($_SESSION['review_csrf_token'], (string)$_POST['csrf_token'])) {
             $error = 'Your session expired. Please try again.';
             return false;
         }
 
-        // Validate service ID
+        if (ReviewRateLimiter::consume()) {
+            $error = 'Too many reviews submitted. Please try again in 15 minutes.';
+            return false;
+        }
+
         $serviceId = filter_var($serviceId, FILTER_VALIDATE_INT);
         if ($serviceId === false || $serviceId < 1) {
             $error = 'Invalid service.';
             return false;
         }
 
-        // Validate review text
+        if (!is_string($text)) {
+            $error = 'Review text cannot be empty.';
+            return false;
+        }
         $text = trim($text);
         if ($text === '') {
             $error = 'Review text cannot be empty.';

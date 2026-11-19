@@ -94,6 +94,7 @@ function language_text($text) {
         'Could not submit review.' => 'Не удалось отправить отзыв.',
         'Review text cannot be empty.' => 'Текст отзыва не может быть пустым.',
         'Review must be 2000 characters or fewer.' => 'Отзыв должен содержать не более 2000 символов.',
+        'Too many reviews submitted. Please try again in 15 minutes.' => 'Слишком много отзывов. Попробуйте снова через 15 минут.',
         'Invalid service.' => 'Услуга не найдена.',
         'Create an account' => 'Создать аккаунт',
         'Name' => 'Имя',
