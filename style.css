@@ -345,16 +345,19 @@ a:hover { color: var(--ink); }
 }
 .calendar-day:hover:not(:disabled) { transform: none; background: var(--blush); box-shadow: none; color: var(--rose-dark); }
 .calendar-day:disabled { background: transparent; color: #c9c1bf; cursor: default; opacity: .6; }
-.calendar-day.has-bookings { background: var(--blush); border-color: #e8c9c5; color: var(--rose-dark); font-weight: 700; }
+.calendar-day.has-bookings { background: #fde4e4; border-color: #d98989; color: #a61b1b; font-weight: 700; }
+.calendar-day.has-bookings:hover:not(:disabled) { background: #fde4e4; color: #a61b1b; }
 .calendar-day.is-selected, .calendar-day.is-selected:hover { background: var(--rose); border-color: var(--rose); color: #fff; }
-.calendar-day-marker { position: absolute; right: 5px; bottom: 4px; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }
+.calendar-day.has-bookings.is-selected, .calendar-day.has-bookings.is-selected:hover { background: var(--rose); border-color: var(--rose); color: #fff; }
+.calendar-day-marker { position: absolute; right: 5px; bottom: 4px; width: 5px; height: 5px; background: #c62828; border-radius: 50%; }
 .calendar-legend { display: flex; align-items: center; gap: 7px; margin: 10px 0 4px; color: var(--muted); font-size: 12px; }
-.calendar-legend-dot { width: 9px; height: 9px; background: var(--rose); border-radius: 50%; }
+.calendar-legend-dot { width: 9px; height: 9px; background: #c62828; border-radius: 50%; }
 .calendar-status { min-height: 24px; margin: 8px 0 4px; color: var(--muted); font-size: 13px; }
-.calendar-status.is-booked, .calendar-status.is-unavailable { color: var(--rose-dark); font-weight: 600; }
+.calendar-status.is-booked { color: #b42318; font-weight: 700; }
+.calendar-status.is-unavailable { color: var(--rose-dark); font-weight: 600; }
 .calendar-status.is-available { color: #4c674d; font-weight: 600; }
 .calendar-booked-times { display: flex; flex-wrap: wrap; gap: 6px; }
-.calendar-booked-time { padding: 3px 9px; background: var(--blush); border-radius: 14px; color: var(--rose-dark); font-size: 13px; font-weight: 700; }
+.calendar-booked-time { padding: 3px 9px; background: #fde4e4; border: 1px solid #e8b3b0; border-radius: 14px; color: #a61b1b; font-size: 13px; font-weight: 700; }
 .booking-calendar + label { margin-top: 2px; }
 .booking-form label { margin-top: 4px; }
 .bookings-table { width: 100%; max-width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
