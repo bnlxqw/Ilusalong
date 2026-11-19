@@ -12,6 +12,16 @@ class ViewReviews {
                    . '</p>';
         }
 
+        if (!UserAuth::getProfile()) {
+            echo $flash
+               . '<p class="review-login-prompt">'
+               . language_text('Please log in to leave a review.')
+               . ' <a href="login">' . language_text('Log in') . '</a>'
+               . ' · <a href="registerForm">' . language_text('Register') . '</a>'
+               . '</p>';
+            return;
+        }
+
         echo '<form class="review-form" action="insertreview" method="post">'
            . $flash
            . '<input type="hidden" name="service_id" value="' . (int)$serviceId . '">'
@@ -27,7 +37,12 @@ class ViewReviews {
         echo '<section class="reviews" id="reviews"><h2>' . language_text('Reviews') . '</h2>';
         if ($arr) {
             foreach ($arr as $value) {
-                echo '<article class="review"><p>'
+                $author = !empty($value['author_name'])
+                    ? $value['author_name']
+                    : language_text('Former guest');
+                echo '<article class="review"><p class="review-author">'
+                   . htmlspecialchars($author, ENT_QUOTES, 'UTF-8')
+                   . '</p><p>'
                    . htmlspecialchars($value['text'], ENT_QUOTES, 'UTF-8')
                    . '</p><time>'
                    . htmlspecialchars($value['date'], ENT_QUOTES, 'UTF-8')

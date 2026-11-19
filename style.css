@@ -266,7 +266,9 @@ a:hover { color: var(--ink); }
 .reviews { margin-top: 38px; }
 .reviews h2 { font-size: 28px; font-weight: 500; }
 .review { margin: 12px 0; padding: 18px 22px; background: var(--white); border: 1px solid var(--line); border-radius: 14px; }
+.review .review-author { margin: 0 0 8px; color: var(--rose-dark); font-weight: 700; }
 .review p { margin: 0 0 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.review-login-prompt { margin-top: 20px; color: var(--muted); }
 .review time, .muted { color: var(--muted); font-size: 13px; }
 .review-count { color: var(--rose-dark); font-size: 13px; }
 .review-form, .register-form, .booking-form {

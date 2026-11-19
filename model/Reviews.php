@@ -15,6 +15,12 @@ class Reviews {
             return false;
         }
 
+        $profile = UserAuth::getProfile();
+        if (!$profile) {
+            $error = 'Please log in to leave a review.';
+            return false;
+        }
+
         if (ReviewRateLimiter::consume()) {
             $error = 'Too many reviews submitted. Please try again in 15 minutes.';
             return false;
@@ -40,14 +46,12 @@ class Reviews {
             return false;
         }
 
-        $userId = isset($_SESSION['customer_user_id']) ? (int)$_SESSION['customer_user_id'] : null;
-
         $db = new Database();
         return $db->executeRun(
             "INSERT INTO reviews (user_id, service_id, text, date)
              VALUES (:user_id, :service_id, :text, CURRENT_TIMESTAMP)",
             array(
-                ':user_id'    => $userId,
+                ':user_id'    => (int)$profile['user_id'],
                 ':service_id' => $serviceId,
                 ':text'       => $text,
             )
@@ -55,8 +59,11 @@ class Reviews {
     }
 
     public static function getReviewsByServiceID($serviceId) {
-        $query = "SELECT review_id, user_id, service_id, text, date FROM reviews
-                  WHERE service_id = :service_id ORDER BY review_id DESC";
+        $query = "SELECT reviews.review_id, reviews.user_id, reviews.service_id,
+                         reviews.text, reviews.date, users.username AS author_name
+                  FROM reviews
+                  LEFT JOIN users ON reviews.user_id = users.user_id
+                  WHERE reviews.service_id = :service_id ORDER BY reviews.review_id DESC";
         $db = new Database();
         return $db->getAll($query, array(':service_id' => (int)$serviceId));
     }
