@@ -27,26 +27,22 @@ class ViewBookings {
                 '</option>';
         }
         echo '</select>';
-        self::UpcomingAvailability($specialists, $bookedSlots);
+        self::BookingCalendar($bookedSlots);
         echo '
+            <label for="booking-time">' . language_text('Choose a time') . '</label>
+            <input id="booking-time" type="time" required>
+            <input id="booking-date" name="booking_date" type="hidden">
             <label for="booking-name">' . language_text('Name') . '</label>
             <input id="booking-name" name="customer_name" type="text" maxlength="100" autocomplete="name" required>
             <label for="booking-email">' . language_text('Email address') . '</label>
             <input id="booking-email" name="customer_email" type="email" maxlength="254" autocomplete="email" required>
             <label for="booking-phone">' . language_text('Phone number') . '</label>
             <input id="booking-phone" name="customer_phone" type="tel" maxlength="32" autocomplete="tel" required>
-            <label for="booking-date">' . language_text('Date and time') . '</label>
-            <input id="booking-date" name="booking_date" type="datetime-local" min="' .
-                htmlspecialchars(date('Y-m-d\TH:i', time() + 60), ENT_QUOTES, 'UTF-8') . '" required>
             <button type="submit" name="createBooking">' . language_text('Book now') . '</button>
-        </form></section>';
+        </form><script defer src="booking-calendar.js?v=2"></script></section>';
     }
 
-    private static function UpcomingAvailability($specialists, $bookedSlots) {
-        if (!$specialists) {
-            return;
-        }
-
+    private static function BookingCalendar($bookedSlots) {
         $slotsBySpecialist = array();
         foreach ($bookedSlots as $slot) {
             $specialistId = (int)$slot['specialist_id'];
@@ -54,37 +50,46 @@ class ViewBookings {
             if (!isset($slotsBySpecialist[$specialistId][$date])) {
                 $slotsBySpecialist[$specialistId][$date] = array();
             }
-            $slotsBySpecialist[$specialistId][$date][] = $slot['booking_date'];
+            $slotsBySpecialist[$specialistId][$date][] = date('H:i', strtotime($slot['booking_date']));
         }
 
-        echo '<details class="booking-availability" open><summary>' .
-            language_text('See booked dates and times') . '</summary>';
-        foreach ($specialists as $specialist) {
-            $specialistId = (int)$specialist['specialist_id'];
-            echo '<section class="booked-specialist-schedule"><h3>' .
-                htmlspecialchars($specialist['name'] . ' — ' . $specialist['specialty'], ENT_QUOTES, 'UTF-8') .
-                '</h3>';
-            if (empty($slotsBySpecialist[$specialistId])) {
-                echo '<p class="muted">' . language_text('No upcoming bookings.') . '</p>';
-            } else {
-                echo '<ul class="booked-day-list">';
-                foreach ($slotsBySpecialist[$specialistId] as $date => $slots) {
-                    echo '<li class="booked-day"><time datetime="' . htmlspecialchars($date, ENT_QUOTES, 'UTF-8') . '">' .
-                        htmlspecialchars(date('d.m.Y', strtotime($date)), ENT_QUOTES, 'UTF-8') .
-                        '</time><span class="booked-time-list">';
-                    foreach ($slots as $slot) {
-                        echo '<time class="booked-time" datetime="' .
-                            htmlspecialchars(date('c', strtotime($slot)), ENT_QUOTES, 'UTF-8') . '">' .
-                            htmlspecialchars(date('H:i', strtotime($slot)), ENT_QUOTES, 'UTF-8') .
-                            '</time>';
-                    }
-                    echo '</span></li>';
-                }
-                echo '</ul>';
-            }
-            echo '</section>';
-        }
-        echo '</details>';
+        $availabilityJson = json_encode(
+            $slotsBySpecialist,
+            JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG
+        );
+        echo '<div class="booking-calendar" data-booked-slots="' .
+            htmlspecialchars($availabilityJson, ENT_QUOTES, 'UTF-8') .
+            '" data-min-date="' . htmlspecialchars(date('Y-m-d'), ENT_QUOTES, 'UTF-8') .
+            '" data-locale="' . htmlspecialchars(current_language(), ENT_QUOTES, 'UTF-8') .
+            '" data-choose-specialist="' . htmlspecialchars(language_text('Choose a specialist and a date to see booked times.'), ENT_QUOTES, 'UTF-8') .
+            '" data-choose-date="' . htmlspecialchars(language_text('Choose a date to see booked times.'), ENT_QUOTES, 'UTF-8') .
+            '" data-no-booked-times="' . htmlspecialchars(language_text('No times are booked on this date.'), ENT_QUOTES, 'UTF-8') .
+            '" data-booked-label="' . htmlspecialchars(language_text('Booked times:'), ENT_QUOTES, 'UTF-8') .
+            '" data-time-taken="' . htmlspecialchars(language_text('This time is already booked. Choose another time.'), ENT_QUOTES, 'UTF-8') .
+            '" data-time-available="' . htmlspecialchars(language_text('This time is available.'), ENT_QUOTES, 'UTF-8') .
+            '" data-time-past="' . htmlspecialchars(language_text('Choose a future date and time.'), ENT_QUOTES, 'UTF-8') .
+            '">
+            <div class="calendar-header">
+                <button class="calendar-month-button" type="button" data-calendar-prev aria-label="' .
+                    htmlspecialchars(language_text('Previous month'), ENT_QUOTES, 'UTF-8') . '">&lsaquo;</button>
+                <h3 data-calendar-month></h3>
+                <button class="calendar-month-button" type="button" data-calendar-next aria-label="' .
+                    htmlspecialchars(language_text('Next month'), ENT_QUOTES, 'UTF-8') . '">&rsaquo;</button>
+            </div>
+            <div class="calendar-grid calendar-weekdays" aria-hidden="true">
+                <span>' . language_text('Mon') . '</span><span>' . language_text('Tue') . '</span>
+                <span>' . language_text('Wed') . '</span><span>' . language_text('Thu') . '</span>
+                <span>' . language_text('Fri') . '</span><span>' . language_text('Sat') . '</span>
+                <span>' . language_text('Sun') . '</span>
+            </div>
+            <div class="calendar-grid calendar-days" data-calendar-days role="group" aria-label="' .
+                htmlspecialchars(language_text('Booking calendar'), ENT_QUOTES, 'UTF-8') . '"></div>
+            <p class="calendar-legend"><span class="calendar-legend-dot"></span>' .
+                language_text('Booked times on this date') . '</p>
+            <p class="calendar-status" data-calendar-status aria-live="polite">' .
+                language_text('Choose a specialist and a date to see booked times.') . '</p>
+            <div class="calendar-booked-times" data-calendar-booked-times aria-live="polite"></div>
+        </div>';
     }
 
     public static function MyBookings($arr) {
