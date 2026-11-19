@@ -14,7 +14,7 @@
     <?php } ?>
 
     <h2><?php echo language_text('Add specialist'); ?></h2>
-    <form method="POST" action="specialistAddResult" class="specialist-admin-form">
+    <form method="POST" action="specialistAddResult" enctype="multipart/form-data" class="specialist-admin-form">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(modelAdmin::getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
         <label for="specialist-name"><?php echo language_text('Name'); ?></label>
         <input id="specialist-name" class="form-control" type="text" name="name" maxlength="100" required>
@@ -22,6 +22,12 @@
         <input id="specialist-specialty" class="form-control" type="text" name="specialty" maxlength="120" required>
         <label for="specialist-bio"><?php echo language_text('Biography'); ?></label>
         <textarea id="specialist-bio" class="form-control" name="bio" maxlength="2000" rows="4"></textarea>
+        <label for="specialist-image"><?php echo language_text('Photo'); ?></label>
+        <div class="specialist-photo-upload">
+            <input id="specialist-image" class="form-control" type="file" name="image" accept="image/*">
+            <small class="help-block"><?php echo language_text('Optional. JPEG, PNG, GIF, or WebP. Images are optimized for upload (maximum 512 KB after optimization).'); ?></small>
+            <span class="image-upload-status" aria-live="polite"></span>
+        </div>
         <fieldset class="specialist-service-options">
             <legend><?php echo language_text('Services provided'); ?></legend>
             <?php foreach ($services as $service) { ?>
@@ -44,6 +50,7 @@
                     <th><?php echo language_text('Specialty'); ?></th>
                     <th><?php echo language_text('Biography'); ?></th>
                     <th><?php echo language_text('Services provided'); ?></th>
+                    <th><?php echo language_text('Photo'); ?></th>
                     <th><?php echo language_text('Actions'); ?></th>
                 </tr></thead>
                 <tbody>
@@ -53,7 +60,7 @@
                             : array(); ?>
                         <tr>
                             <td data-label="<?php echo htmlspecialchars(language_text('Name'), ENT_QUOTES, 'UTF-8'); ?>">
-                                <form id="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" method="POST" action="specialistEditResult" class="specialist-edit-form">
+                                <form id="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" method="POST" action="specialistEditResult" enctype="multipart/form-data" class="specialist-edit-form">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(modelAdmin::getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
                                     <input type="hidden" name="specialist_id" value="<?php echo (int)$specialist['specialist_id']; ?>">
                                 </form>
@@ -75,6 +82,16 @@
                                         </label>
                                     <?php } ?>
                                 </fieldset>
+                            </td>
+                            <td data-label="<?php echo htmlspecialchars(language_text('Photo'), ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php $photoUri = ServiceImage::dataUri($specialist['image']); ?>
+                                <?php if ($photoUri !== '') { ?>
+                                    <img class="specialist-photo-preview" src="<?php echo $photoUri; ?>" alt="<?php echo htmlspecialchars(language_text('Current photo'), ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php } ?>
+                                <div class="specialist-photo-upload">
+                                    <input form="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" class="form-control" type="file" name="image" accept="image/*" aria-label="<?php echo htmlspecialchars(language_text('Photo'), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <span class="image-upload-status" aria-live="polite"></span>
+                                </div>
                             </td>
                             <td data-label="<?php echo htmlspecialchars(language_text('Actions'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <button form="specialist-edit-<?php echo (int)$specialist['specialist_id']; ?>" class="btn btn-primary specialist-save-button" type="submit" name="saveSpecialist" aria-label="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars(language_text('Save changes'), ENT_QUOTES, 'UTF-8'); ?>"><span class="action-label"><?php echo language_text('Save changes'); ?></span><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>

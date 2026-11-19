@@ -33,6 +33,8 @@ function language_text($text) {
         'Add specialist' => 'Добавить специалиста',
         'Specialty' => 'Специализация',
         'Biography' => 'О специалисте',
+        'Photo' => 'Фото',
+        'Current photo' => 'Текущее фото',
         'No specialists have been added yet.' => 'Специалисты пока не добавлены.',
         'Specialist saved.' => 'Данные специалиста сохранены.',
         'Unable to save specialist.' => 'Не удалось сохранить данные специалиста.',

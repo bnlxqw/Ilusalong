@@ -1,0 +1,2 @@
+ALTER TABLE specialists
+    ADD COLUMN image MEDIUMBLOB NULL AFTER bio;

@@ -7,8 +7,13 @@
         <div class="specialist-grid">
             <?php foreach ($arr as $specialist) { ?>
                 <?php preg_match('/^./us', $specialist['name'], $initial); ?>
+                <?php $photoUri = ServiceImage::dataUri($specialist['image']); ?>
                 <article class="specialist-card">
-                    <div class="specialist-avatar" aria-hidden="true"><?php echo htmlspecialchars(isset($initial[0]) ? $initial[0] : '', ENT_QUOTES, 'UTF-8'); ?></div>
+                    <?php if ($photoUri !== '') { ?>
+                        <img class="specialist-photo" src="<?php echo $photoUri; ?>" alt="<?php echo htmlspecialchars($specialist['name'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php } else { ?>
+                        <div class="specialist-avatar" aria-hidden="true"><?php echo htmlspecialchars(isset($initial[0]) ? $initial[0] : '', ENT_QUOTES, 'UTF-8'); ?></div>
+                    <?php } ?>
                     <div class="specialist-card-content">
                         <p class="specialist-specialty"><?php echo htmlspecialchars($specialist['specialty'], ENT_QUOTES, 'UTF-8'); ?></p>
                         <h2><?php echo htmlspecialchars($specialist['name'], ENT_QUOTES, 'UTF-8'); ?></h2>

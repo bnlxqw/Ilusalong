@@ -3,7 +3,7 @@ class Specialist {
     public static function getAllActive() {
         $db = new Database();
         return $db->getAll(
-            'SELECT specialist_id, name, specialty, bio
+            'SELECT specialist_id, name, specialty, bio, image
              FROM specialists
              WHERE is_active = 1
              ORDER BY name ASC'

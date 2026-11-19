@@ -3,7 +3,7 @@ class modelAdminSpecialists {
     public static function getSpecialistList() {
         $db = new Database();
         return $db->getAll(
-            'SELECT specialist_id, name, specialty, bio, is_active
+            'SELECT specialist_id, name, specialty, bio, image, is_active
              FROM specialists
              ORDER BY name ASC'
         );
@@ -38,8 +38,14 @@ class modelAdminSpecialists {
             return false;
         }
 
+        $image = ServiceImage::readUploadedImage('image', $error);
+        if ($image === false) {
+            return false;
+        }
+
         $serviceIds = $data['service_ids'];
         unset($data['service_ids']);
+        $data[':image'] = $image;
         $db = new Database();
         if (!$db->beginTransaction()) {
             $error = 'Unable to save specialist.';
@@ -48,8 +54,8 @@ class modelAdminSpecialists {
 
         try {
             if ($db->executeRun(
-                'INSERT INTO specialists (name, specialty, bio, is_active)
-                 VALUES (:name, :specialty, :bio, 1)',
+                'INSERT INTO specialists (name, specialty, bio, image, is_active)
+                 VALUES (:name, :specialty, :bio, :image, 1)',
                 $data
             ) < 1) {
                 $error = 'Unable to save specialist.';
@@ -89,9 +95,14 @@ class modelAdminSpecialists {
             return false;
         }
 
+        $image = ServiceImage::readUploadedImage('image', $error);
+        if ($image === false) {
+            return false;
+        }
+
         $db = new Database();
         $existing = $db->getOne(
-            'SELECT name, specialty, bio FROM specialists WHERE specialist_id = :specialist_id',
+            'SELECT specialist_id FROM specialists WHERE specialist_id = :specialist_id',
             array(':specialist_id' => $specialistId)
         );
         if (!$existing) {
@@ -102,15 +113,20 @@ class modelAdminSpecialists {
         $serviceIds = $data['service_ids'];
         unset($data['service_ids']);
         $data[':specialist_id'] = $specialistId;
+        if ($image !== null) {
+            $data[':image'] = $image;
+        }
         if (!$db->beginTransaction()) {
             $error = 'Unable to save specialist.';
             return false;
         }
 
         try {
+            $updateImage = $image !== null;
             $db->executeRun(
                 'UPDATE specialists
-                 SET name = :name, specialty = :specialty, bio = :bio
+                 SET name = :name, specialty = :specialty, bio = :bio' .
+                    ($updateImage ? ', image = :image' : '') . '
                  WHERE specialist_id = :specialist_id',
                 $data
             );

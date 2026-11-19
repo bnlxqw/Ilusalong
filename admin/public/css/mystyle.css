@@ -118,16 +118,47 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
 .specialist-service-option { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: start; gap: 8px; width: 100%; min-width: 0; margin: 0 !important; font-weight: 400; }
 .specialist-service-option input[type="checkbox"] { margin: 5px 0 0; }
 .specialist-service-option span { display: block; min-width: 0; overflow-wrap: break-word; word-break: normal; }
-.specialist-admin-table th:nth-child(1) { width: 15%; }
-.specialist-admin-table th:nth-child(2) { width: 15%; }
-.specialist-admin-table th:nth-child(3) { width: 21%; }
-.specialist-admin-table th:nth-child(4) { width: 34%; }
-.specialist-admin-table th:nth-child(5) { width: 15%; }
+.specialist-admin-table th:nth-child(1) { width: 13%; }
+.specialist-admin-table th:nth-child(2) { width: 13%; }
+.specialist-admin-table th:nth-child(3) { width: 18%; }
+.specialist-admin-table th:nth-child(4) { width: 23%; }
+.specialist-admin-table th:nth-child(5) { width: 18%; }
+.specialist-admin-table th:nth-child(6) { width: 15%; }
+.specialist-photo-preview { display: block; width: 64px; height: 64px; margin-bottom: 8px; border-radius: 50%; object-fit: cover; }
+.specialist-photo-upload { display: grid; width: 100%; min-width: 0; gap: 8px; }
+.specialist-photo-upload input[type="file"] {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  padding: 8px;
+  font-size: 13px;
+}
+.specialist-photo-upload .help-block { margin: 0; line-height: 1.45; overflow-wrap: break-word; word-break: normal; }
 .specialist-edit-form { margin: 0; }
-.specialist-delete-form { display: inline-block; margin: 0 0 0 6px; }
+.specialist-delete-form { display: block; width: 150px; max-width: 100%; margin: 0; }
 .specialist-admin-form textarea,
 .specialist-edit-form textarea { resize: vertical; }
-.specialist-save-button, .specialist-delete-button { white-space: normal; }
+.specialist-admin-table td:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.specialist-save-button, .specialist-delete-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 150px;
+  max-width: 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  padding: 0 12px;
+  white-space: nowrap;
+}
 .category-inline-form { display: flex; align-items: center; gap: 8px; }
 .category-delete-form { margin: 0; }
 .category-inline-form .form-control { min-width: 0; }
@@ -222,6 +253,19 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
   }
   .admin-content .table-responsive > .admin-table td:last-child,
   .services-table-wrap > .table td:last-child { border-bottom: 0; }
+  .admin-content .table-responsive > .specialist-admin-table td:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .admin-content .table-responsive > .specialist-admin-table td:nth-child(5) {
+    display: block;
+  }
+  .admin-content .table-responsive > .specialist-admin-table td:nth-child(5)::before {
+    display: block;
+    margin-bottom: 8px;
+  }
   .admin-content .table-responsive .category-inline-form,
   .services-table-wrap td:last-child { min-width: 0; }
   .services-table-wrap td:last-child a { display: block; width: fit-content; max-width: 100%; }
@@ -244,16 +288,7 @@ a:hover, a:focus { color: var(--admin-ink); text-decoration: none; }
   .specialist-save-button .action-label,
   .specialist-delete-button .action-label,
   .services-table-wrap .action-label { display: none; }
-  .specialist-save-button, .specialist-delete-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-    padding: 0;
-  }
-  .specialist-delete-form { margin-left: 4px; }
+  .specialist-save-button, .specialist-delete-button { width: 150px; }
   .services-table-wrap td:last-child a {
     display: inline-flex;
     align-items: center;

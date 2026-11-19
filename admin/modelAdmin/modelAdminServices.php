@@ -22,7 +22,7 @@ class modelAdminServices{
         }
 
         $userId = self::getAdminUserId();
-        $image = self::getUploadedImage($error);
+        $image = ServiceImage::readUploadedImage('image', $error);
         if ($image === false) {
             return false;
         }
@@ -62,7 +62,7 @@ class modelAdminServices{
         }
 
         $userId = self::getAdminUserId();
-        $image = self::getUploadedImage($error);
+        $image = ServiceImage::readUploadedImage('image', $error);
         if ($image === false) {
             return false;
         }
@@ -122,36 +122,5 @@ class modelAdminServices{
         return $duration;
     }
 
-    private static function getUploadedImage(&$error) {
-        if (!isset($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
-            return null;
-        }
-
-        if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-            $error = 'The image upload failed. Please try again with a smaller image.';
-            return false;
-        }
-
-        if ($_FILES['image']['size'] > 512 * 1024) {
-            $error = 'The optimized image must be 512 KB or smaller. Select another image or reduce its size.';
-            return false;
-        }
-
-        $allowedTypes = array('image/jpeg', 'image/png', 'image/gif', 'image/webp');
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $_FILES['image']['tmp_name']);
-        finfo_close($finfo);
-        if (!in_array($mime, $allowedTypes, true)) {
-            $error = 'Choose a valid JPEG, PNG, GIF, or WebP image.';
-            return false;
-        }
-
-        $image = file_get_contents($_FILES['image']['tmp_name']);
-        if ($image === false) {
-            $error = 'The uploaded image could not be read.';
-            return false;
-        }
-        return $image;
-    }
 }
 ?>

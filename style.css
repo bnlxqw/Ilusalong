@@ -257,6 +257,14 @@ a:hover { color: var(--ink); }
   color: var(--rose-dark);
   font: 500 26px/1 Georgia, serif;
 }
+.specialist-photo {
+  display: block;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 .specialist-card-content { min-width: 0; }
 .specialist-card-content > h3 { margin: 18px 0 8px; font-size: 16px; font-weight: 600; }
 .specialist-service-list { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
