@@ -304,6 +304,37 @@ a:hover { color: var(--ink); }
 .profile-logout-form button { min-height: 44px; }
 .booking-section, .bookings-page { margin-top: 34px; }
 .booking-section h2, .bookings-page h1 { font-weight: 500; }
+.booking-availability {
+  max-width: 620px;
+  margin: 18px 0;
+  padding: 16px 18px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.booking-availability summary { color: var(--rose-dark); cursor: pointer; font-weight: 700; }
+.booked-specialist-schedule { margin-top: 16px; }
+.booked-specialist-schedule h3 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
+.booked-day-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.booked-day {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+.booked-day > time { font-weight: 600; }
+.booked-time-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.booked-time {
+  padding: 3px 9px;
+  background: var(--blush);
+  border-radius: 14px;
+  color: var(--rose-dark);
+  font-size: 13px;
+  font-weight: 700;
+}
 .booking-form label { margin-top: 4px; }
 .bookings-table { width: 100%; max-width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .bookings-table th, .bookings-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; }

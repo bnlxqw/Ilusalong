@@ -1,8 +1,9 @@
 <?php
 class ViewBookings {
-    public static function BookingForm($serviceId, $specialists) {
+    public static function BookingForm($serviceId, $specialists, $bookedSlots) {
         echo '<section class="booking-section" id="booking"><h2>' . language_text('Book this service') . '</h2>';
         self::FlashMessage();
+        self::UpcomingAvailability($specialists, $bookedSlots);
         $profile = UserAuth::getProfile();
         if (!$profile) {
             echo '<p class="notice">' . language_text('Please log in to book a service.') .
@@ -38,6 +39,51 @@ class ViewBookings {
                 htmlspecialchars(date('Y-m-d\TH:i', time() + 60), ENT_QUOTES, 'UTF-8') . '" required>
             <button type="submit" name="createBooking">' . language_text('Book now') . '</button>
         </form></section>';
+    }
+
+    private static function UpcomingAvailability($specialists, $bookedSlots) {
+        if (!$specialists) {
+            return;
+        }
+
+        $slotsBySpecialist = array();
+        foreach ($bookedSlots as $slot) {
+            $specialistId = (int)$slot['specialist_id'];
+            $date = date('Y-m-d', strtotime($slot['booking_date']));
+            if (!isset($slotsBySpecialist[$specialistId][$date])) {
+                $slotsBySpecialist[$specialistId][$date] = array();
+            }
+            $slotsBySpecialist[$specialistId][$date][] = $slot['booking_date'];
+        }
+
+        echo '<details class="booking-availability" open><summary>' .
+            language_text('See booked dates and times') . '</summary>';
+        foreach ($specialists as $specialist) {
+            $specialistId = (int)$specialist['specialist_id'];
+            echo '<section class="booked-specialist-schedule"><h3>' .
+                htmlspecialchars($specialist['name'] . ' — ' . $specialist['specialty'], ENT_QUOTES, 'UTF-8') .
+                '</h3>';
+            if (empty($slotsBySpecialist[$specialistId])) {
+                echo '<p class="muted">' . language_text('No upcoming bookings.') . '</p>';
+            } else {
+                echo '<ul class="booked-day-list">';
+                foreach ($slotsBySpecialist[$specialistId] as $date => $slots) {
+                    echo '<li class="booked-day"><time datetime="' . htmlspecialchars($date, ENT_QUOTES, 'UTF-8') . '">' .
+                        htmlspecialchars(date('d.m.Y', strtotime($date)), ENT_QUOTES, 'UTF-8') .
+                        '</time><span class="booked-time-list">';
+                    foreach ($slots as $slot) {
+                        echo '<time class="booked-time" datetime="' .
+                            htmlspecialchars(date('c', strtotime($slot)), ENT_QUOTES, 'UTF-8') . '">' .
+                            htmlspecialchars(date('H:i', strtotime($slot)), ENT_QUOTES, 'UTF-8') .
+                            '</time>';
+                    }
+                    echo '</span></li>';
+                }
+                echo '</ul>';
+            }
+            echo '</section>';
+        }
+        echo '</details>';
     }
 
     public static function MyBookings($arr) {

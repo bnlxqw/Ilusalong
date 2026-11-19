@@ -55,6 +55,8 @@ function language_text($text) {
         'Please log in to view your bookings.' => 'Чтобы посмотреть записи, войдите в аккаунт.',
         'The booking slot is being reserved. Please try again.' => 'Это время сейчас бронируется. Попробуйте ещё раз.',
         'This specialist is already booked at that time. Please choose another time.' => 'Этот мастер уже занят в выбранное время. Выберите другое время.',
+        'See booked dates and times' => 'Посмотреть занятые даты и время',
+        'No upcoming bookings.' => 'Предстоящих записей нет.',
         'Phone number' => 'Номер телефона',
         'Date and time' => 'Дата и время',
         'Book now' => 'Забронировать',

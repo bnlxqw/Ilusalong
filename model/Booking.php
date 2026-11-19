@@ -157,6 +157,31 @@ class Booking {
         ));
     }
 
+    public static function getUpcomingBookedSlots($specialists) {
+        if (!$specialists) {
+            return array();
+        }
+
+        $placeholders = array();
+        $params = array();
+        foreach ($specialists as $index => $specialist) {
+            $placeholder = ':specialist_' . $index;
+            $placeholders[] = $placeholder;
+            $params[$placeholder] = (int)$specialist['specialist_id'];
+        }
+
+        $db = new Database();
+        return $db->getAll(
+            "SELECT specialist_id, booking_date
+             FROM bookings
+             WHERE specialist_id IN (" . implode(', ', $placeholders) . ")
+               AND status = 'active'
+               AND booking_date > NOW()
+             ORDER BY specialist_id ASC, booking_date ASC",
+            $params
+        );
+    }
+
     public static function cancelBooking($bookingId, &$error = null) {
         $profile = UserAuth::getProfile();
         if (!$profile) {

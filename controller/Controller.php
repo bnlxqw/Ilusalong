@@ -29,6 +29,7 @@ class Controller {
             return;
         }
         $specialists = Specialist::getAllActive();
+        $bookedSlots = Booking::getUpcomingBookedSlots($specialists);
         include_once 'view/service-detail.php';
     }
 
